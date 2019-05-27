@@ -25,14 +25,8 @@ $queryOk = $_GET['query'];
 </head>
 <body>
   <div class="container-fluid">
-    <nav id="navbar">
-      <ul>
-        <li><a href="index.php" class="nav-link" id="home">Home</a></li>
-        <li><a href="addcategory.php" class="nav-link" id="addcategory">Add Category</a></li>
-        <li><a href="addproduct.php" class="nav-link" id="addproduct">Add Products</a></li>
-        <li><a href="carousel.php" class="nav-link" id="carousel">Manage Carousel</a></li>
-      </ul>
-    </nav>
+
+    <div id="nav-section"></div> <!-- navbar section -->
 
     <section class="main-section">
       <?php if($queryOk > 0): ?>
@@ -48,10 +42,6 @@ $queryOk = $_GET['query'];
   </div>
   <script src="../js/jquery-3.4.1.min.js"></script> <!-- jQuery script -->
   <script src="../js/bootstrap.min.js"></script> <!-- bootstrap -->
-  <script>
-    $(".btn").click(function() {
-      window.location.replace("http://localhost/Assignment/php-products/backend/");
-    });
-  </script>
+  <script src="../js/admin.js"></script> <!-- my-script -->
 </body>
 </html>

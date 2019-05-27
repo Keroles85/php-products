@@ -2,13 +2,22 @@
 // include config file
 require_once 'config.php';
 
-if (isset($_POST['btn_add'])) {
+/**
+ * add category function
+ */
+function addCategory() {
+  global $db;
   $name = $_POST['name'];
   $description = $_POST['description'];
   $sql = "insert into categories (name, description) values ('$name', '$description')";
   $stmt = $db -> exec($sql);
   header('location: confirm.php?action=Category&type=add&query='.$stmt);
 }
+
+if (isset($_POST['btn_add'])) {
+  addCategory();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -17,25 +26,14 @@ if (isset($_POST['btn_add'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Add product page</title>
   <link rel="stylesheet" href="../css/bootstrap.min.css"> <!-- bootstrap -->
   <link rel="stylesheet" href="../css/all.min.css"> <!-- fontaweson -->
   <link rel="stylesheet" href="../css/main.css"> <!-- my-style -->
-  <style>
-    h1 {
-      margin: 25px 0 25px 10px;
-    }
-
-    form {
-      border: 1px solid #e7e7e7;
-      border-radius: 10px;
-      padding: 25px;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.25);
-    }
-  </style>
+  <title>Add product page</title>
 </head>
 <body>
   <div class="container-fluid">
+
     <div id="nav-section"></div>
 
     <section class="main-section">
