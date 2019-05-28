@@ -10,6 +10,7 @@
 #navbar ul {
   padding: 0;
   margin-top: 25px;
+  margin-left: 15px;
 }
 #navbar ul li {
   list-style-type: none;
@@ -28,11 +29,21 @@
 .main-section h1 {
   margin: 25px 0 25px 10px;
 }
-.main-section form {
+.main-section .container {
+  margin-bottom: 25px;
+}
+.main-section .container form {
   border: 1px solid #e7e7e7;
   border-radius: 10px;
   padding: 25px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+}
+
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
 }
 
 /*# sourceMappingURL=main.css.map */

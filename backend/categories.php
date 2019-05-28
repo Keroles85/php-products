@@ -1,22 +1,15 @@
 <?php
 // include config file
 require_once 'config.php';
-
-/**
- * add category function
- */
-function addCategory() {
-  global $db;
-  $name = $_POST['name'];
-  $description = $_POST['description'];
-  $sql = "insert into categories (name, description) values ('$name', '$description')";
-  $stmt = $db -> exec($sql);
-  header('location: confirm.php?action=Category&type=add&query='.$stmt);
+ 
+//get categories function to show in dropdown menu
+function getCategories() {
+  global $db, $categories;
+  $categories = $db->query("select * from categories");
+  unset($db);
 }
 
-if (isset($_POST['btn_add'])) {
-  addCategory();
-}
+getCategories();
 
 ?>
 
@@ -29,7 +22,7 @@ if (isset($_POST['btn_add'])) {
   <link rel="stylesheet" href="../css/bootstrap.min.css"> <!-- bootstrap -->
   <link rel="stylesheet" href="../css/all.min.css"> <!-- fontaweson -->
   <link rel="stylesheet" href="../css/main.css"> <!-- my-style -->
-  <title>Add product page</title>
+  <title>Add category page</title>
 </head>
 <body>
   <div class="container-fluid">
@@ -38,20 +31,39 @@ if (isset($_POST['btn_add'])) {
 
     <section class="main-section">
       <div class="container">
-        <h1>Add new category</h1>
-      
-        <form action="" method="post">
-          <div class="form-group">
-            <label for="name">Category Name</label>
-            <input type="text" name="name" id="name" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
-          </div>
+        <h1>Categories Main Page</h1>
 
-          <button class="btn btn-primary" name="btn_add">Add Category</button>
-        </form>
+        <a href='add.php?type=category' class="btn btn-success" style="margin: 0 0 2em 1em;">Add New Category</a>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <?php foreach($categories as $category): ?>
+            <tr>
+              <th scope="row"><?= $category['id'] ?></th>
+              <td><?= $category['name'] ?></td>
+              <td><?= $category['description'] ?></td>
+              <td>
+                <a href="update.php?type=category&id=<?= $category['id'] ?>" title="Update Record">
+                  <i class="fas fa-pen"></i>
+                </a> &nbsp;
+                <a onClick="javascript: return confirm('Are you sure?!');" href="delete.php?type=category&id=<?= $category['id'] ?>" title="Delete Record">
+                  <i class="fas fa-trash-alt" style="color:red"></i>
+                </a>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+
+          </tbody>
+        </table>
 
       </div> <!-- .container end -->
 
