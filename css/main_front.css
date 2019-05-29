@@ -1,0 +1,33 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas: "nav nav nav" "crsl crsl crsl" "feat feat feat";
+  grid-gap: 1rem;
+  max-width: 1140px;
+  margin: auto;
+}
+.wrapper .nav_bar {
+  grid-area: nav;
+  text-align: center;
+}
+.wrapper .main-carousel {
+  grid-area: crsl;
+  text-align: center;
+}
+.wrapper .main-content {
+  grid-area: feat;
+}
+.wrapper .main-content .items {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.wrapper .main-content .items .card {
+  border-radius: 0 !important;
+}
+.wrapper .main-content .items .card img {
+  border-radius: 0 !important;
+}
+
+/*# sourceMappingURL=main_front.css.map */

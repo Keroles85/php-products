@@ -1,0 +1,48 @@
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas: 
+    "nav nav nav"
+    "crsl crsl crsl"
+    "feat feat feat";
+  grid-gap: 1rem;
+  max-width: 1140px;
+  //min-height: 100vh;
+  margin: auto;
+
+  .nav_bar {
+    grid-area: nav;
+    text-align: center;
+  }
+
+  .main-carousel {
+    grid-area: crsl;
+    text-align: center;
+  }
+
+  .main-content {
+    grid-area: feat;
+    //text-align: center;
+
+    .items {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+
+      .card {
+        border-radius: 0!important;
+
+        img {
+          border-radius: 0!important;
+        }
+      }
+    }
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  
+}
