@@ -16,7 +16,7 @@ function getCategories() {
 }
 
 /** 
-* add new product to database function
+* add product section
  */
 function addProduct() {
   global $db;
@@ -51,14 +51,14 @@ function insertImg($id) {
 function uploadFile($file) {
   //$extension = explode('.', $file['name']);
   $extension = strtolower(pathinfo($file['name'],PATHINFO_EXTENSION));
-  $imgURL = "../upload/" . time() . ".{$extension}";
+  $imgURL = "upload/" . time() . ".{$extension}";
   $tmpLocation = $file['tmp_name'];
-  move_uploaded_file($tmpLocation, $imgURL);
+  move_uploaded_file($tmpLocation, '../'.$imgURL);
   return $imgURL;
 }
 
 /**
-* add category function
+* add category section
  */
 function addCategory() {
   global $db;
@@ -70,11 +70,44 @@ function addCategory() {
   header('location: confirm.php?action=Category&type=add&query='.$stmt);
 }
 
-//call addProduct() or addCategory() function when add button is submitted
-if (isset($_POST['btn_add_product'])) {
-  addProduct();
-} elseif (isset($_POST['btn_add_category'])) {
-  addCategory();
+/**
+* add carousel section
+ */
+function addCarousel() {
+  global $db;
+  $title = $_POST['title'];
+  $caption = $_POST['caption'];
+  $active = isset($_POST['active'])? 1 : 0;
+  $visible = isset($_POST['visible'])? 1 : 0;
+  $imgURL = uploadFile($_FILES['image']);
+  $sql = "insert into carousel (title, caption, img_url, active, visible) 
+        values ('$title', '$caption', '$imgURL', $active, $visible)";
+  $stmt = $db -> exec($sql);
+  header('location: confirm.php?action=Carousel%20Item&type=add&query='.$stmt);
+}
+
+//check if there's active item in carousel
+function getActive() {
+  global $db;
+  $active = $db -> query("select * from carousel where active = 1") -> rowCount();
+  return $active;
+  unset($db);
+}
+
+
+//check which function when add button is submitted
+if (isset($_POST['btn_add'])) {
+  switch ($addType) {
+    case 'product':
+      addProduct();
+      break;
+    case 'category':
+      addCategory();
+      break;
+    case 'carousel':
+      addCarousel();
+      break;
+  }
 }
 
 ?>
@@ -101,6 +134,7 @@ if (isset($_POST['btn_add_product'])) {
 
         <!-- add product form -->
         <?php if($addType == 'product'): ?>
+
         <h1>Add new product</h1>
         <form action="" method="post" enctype="multipart/form-data">
           <div class="form-group">
@@ -129,12 +163,13 @@ if (isset($_POST['btn_add_product'])) {
             <label for="image">Select Image</label>
             <input type="file" class="form-control-file" name="image" id="image">
           </div>
-          <button class="btn btn-primary" name="btn_add_product">Add Product</button>
+          <button class="btn btn-primary" name="btn_add">Add Product</button>
         </form>
         
 
         <!-- add category form -->
-        <?php else: ?>
+        <?php elseif ($addType == 'category'): ?>
+
         <h1>Add new Category</h1>
         <form action="" method="post">
           <div class="form-group">
@@ -146,7 +181,36 @@ if (isset($_POST['btn_add_product'])) {
             <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
           </div>
 
-          <button class="btn btn-primary" name="btn_add_category">Add Category</button>
+          <button class="btn btn-primary" name="btn_add">Add Category</button>
+        </form>
+
+        <!-- add carousel item form -->
+        <?php else: ?>
+
+        <h1>Add new carousel item</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="caption">Caption</label>
+            <textarea name="caption" id="caption" cols="30" rows="10" class="form-control"></textarea>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="active" name="active" value="1" <?= getActive()? 'disabled' : '' ?>>
+            <label class="form-check-label" for="active">Active</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="visible" name="visible" value="2">
+            <label class="form-check-label" for="inlineCheckbox2">Visible</label>
+          </div>
+          <div class="form-group" style="margin-top: 10px;">
+            <label for="image">Select Image</label>
+            <input type="file" class="form-control-file" name="image" id="image">
+          </div>
+            <button class="btn btn-primary" name="btn_add">Add Item</button>
+          
         </form>
 
         <?php endif; ?>

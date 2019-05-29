@@ -1,16 +1,36 @@
 <?php
 require_once 'config.php';
 
+if (isset($_GET['cat'])) $catID = $_GET['cat'];
+
 function getProducts() {
-  global $db, $products;
-  $products = $db -> query("select prds.id, prds.name as product_name, prds.description, prds.price, 
-    cat.name as cat_name, img.image_url from 
+  global $catID;
+  global $db, $products, $catID;
+  if (!isset($catID) || $catID == 'all') {
+    $products = $db -> query("select prds.id, prds.name as product_name, prds.description, prds.price, 
+    cat.id as cat_id, cat.name as cat_name, img.image_url from 
     products as prds inner join categories as cat on prds.cat_id = cat.id
-    inner join images as img on prds.id = img.product_id");
+    inner join images as img on prds.id = img.product_id order by cat_id, prds.id asc");
+  } else {
+    $products = $db -> query("select prds.id, prds.name as product_name, prds.description, prds.price, 
+    cat.id as cat_id, cat.name as cat_name, img.image_url from 
+    products as prds inner join categories as cat on prds.cat_id = cat.id
+    inner join images as img on prds.id = img.product_id where cat_id = $catID");
+  }
+  
+  
+  //unset($db);//close connection
+}
+
+function getCategories() {
+  global $db, $categories;
+  $categories = $db -> query ('select * from categories');
   unset($db);//close connection
 }
 
 getProducts();
+getCategories();
+
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +53,19 @@ getProducts();
       <div class="container">
 
         <h1>Products Main Page</h1>
-        
+
+        <!-- select category to sort products -->
+        <div class="form-group">
+          <label for="categories">Select Category to filter</label>
+          <select name="categories" id="categories" class="form-control">
+            <option value="all">-- All --</option>
+            <?php foreach ($categories as $category): ?>
+              <option value="<?= $category['id'] ?>" <?= ($catID == $category['id'])? 'selected': ''; ?> ><?= $category['name'] ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+
+        <!-- button to add new product -->
         <a href='add.php?type=product' class="btn btn-success" style="margin: 0 0 2em 1em;">Add New Product</a>
 
         <table class="table">
@@ -57,7 +89,7 @@ getProducts();
               <td><?= $product['product_name'] ?></td>
               <td><?= $product['description'] ?></td>
               <td><?= $product['price'] ?></td>
-              <td><img src="<?= $product['image_url'] ?>" class="img-thumbnail"></td>
+              <td><img src="../<?= $product['image_url'] ?>" class="img-thumbnail"></td>
               <td>
                 <a href="update.php?type=product&id=<?= $product['id'] ?>" title="Update Record">
                   <i class="fas fa-pen"></i>
@@ -79,5 +111,14 @@ getProducts();
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="../js/bootstrap.min.js"></script> <!-- bootstrap -->
   <script src="../js/admin.js"></script> <!-- my-script -->
+
+
+  <script>
+    $(document).ready(function() {
+      $('#categories').change(function() {
+        window.location.href = "http://localhost/Assignment/php-products/backend/products.php?cat=" + $('#categories').val();
+      });
+    });
+  </script>
 </body>
 </html>
