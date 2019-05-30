@@ -1,6 +1,16 @@
 <?php
 require_once 'backend/config.php';
 
+$id = $_GET['id'];
+getProduct($id);
+
+function getProduct($id) {
+  global $db, $product;
+  $sql = "select products.*, images.image_url from products inner join images
+    on images.product_id = products.id where products.id = $id";
+  $product = $db -> query($sql);
+
+}
 
 ?>
 
@@ -11,27 +21,41 @@ require_once 'backend/config.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>PHP Products Home Page</title>
-  <link rel="stylesheet" href="../css/bootstrap.min.css"> <!-- bootstrap -->
-  <link rel="stylesheet" href="../css/all.min.css"> <!-- fontaweson -->
-  <link rel="stylesheet" href="../css/main.css"> <!-- my-style -->
+  <link rel="stylesheet" href="css/bootstrap.min.css"> <!-- bootstrap -->
+  <link rel="stylesheet" href="css/all.min.css"> <!-- fontaweson -->
+  <link rel="stylesheet" href="css/product.css"> <!-- my-style -->
 </head>
 <body>
+<div class="wrapper">
 
-  <div class="container-fluid">
+  <header class="nav_bar"></header>
 
-    <section class="main-section">
-      <div class="container">
+  <section class="main-section">
+  <div class="card">
 
-        <h1>Admin Home Page</h1>
-
-        
+    <?php foreach($product as $items): ?>
+    <img src="<?= $items['image_url'] ?>" class="card-img-top" alt="Product Image">
+    <div class="card-body">
+      <h5 class="card-title"><?= $items['name'] ?></h5>
+        <p>Price: <b><?= $items['price'] ?></b></p>
+      <p class="card-text"><?= $items['description'] ?></p>
+      <div class="product-price">
+        <p>
+          <button class="btn btn-primary">Add to cart</button>
+          <button class="btn btn-secondary">Save to list</button>
+      </p>
       </div>
-    </section>
-  </div>
+      
+    </div>
+    <?php endforeach; ?>
 
-  <script src="../js/jquery-3.4.1.min.js"></script> <!-- jQuery script -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="../js/bootstrap.min.js"></script> <!-- bootstrap -->
-  <script src="../js/admin.js"></script> <!-- my-script -->
+  </div>
+    
+  </section>
+</div>
+
+<script src="js/jquery-3.4.1.min.js"></script> <!-- jQuery script -->
+<script src="js/bootstrap.min.js"></script> <!-- bootstrap -->
+<script src="js/front.js"></script>
 </body>
 </html>
