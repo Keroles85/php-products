@@ -37,13 +37,11 @@ function getProduct($id) {
     <img src="<?= $items['image_url'] ?>" class="card-img-top" alt="Product Image">
     <div class="card-body">
       <h5 class="card-title"><?= $items['name'] ?></h5>
-        <p>Price: <b><?= $items['price'] ?></b></p>
-      <p class="card-text"><?= $items['description'] ?></p>
-      <div class="product-price">
-        <p>
-          <button class="btn btn-primary">Add to cart</button>
-          <button class="btn btn-secondary">Save to list</button>
-      </p>
+      <div class="space">Price: <b><?= $items['price'] ?></b></div>
+      <div class="card-text space"><?= $items['description'] ?></div>
+      <div class="space">
+        <button class="btn btn-primary">Add to cart</button>
+        <button class="btn btn-secondary">Save to list</button>
       </div>
       
     </div>

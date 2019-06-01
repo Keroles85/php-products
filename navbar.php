@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="products.php">Products</a>
+          <a class="nav-link" href="categories.php">Products</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Features</a>

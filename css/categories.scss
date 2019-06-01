@@ -1,0 +1,31 @@
+@mixin boxShadow($horz, $vert, $blur, $color) {
+  -webkit-box-shadow: $horz $vert $blur $color;
+  -moz-box-shadow: $horz $vert $blur $color;
+  box-shadow: $horz $vert $blur $color;
+}
+
+.wrapper {
+  max-width: 1140px;
+  margin: auto;
+
+  a {
+      color: rgb(33, 37, 41);
+      text-decoration: none;
+    }
+
+  .jumbotron {
+    padding: 1rem 1rem;
+    margin-bottom: 0;
+    border: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: 0.3s ease;
+
+    p {
+      font-size: 1rem;
+    }
+    &:hover {
+      transform: scale(1.025);
+      @include boxShadow(0, 5px, 10px, rgba(0,0,0,0.25));
+    }
+  }
+}

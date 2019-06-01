@@ -3,7 +3,11 @@
   margin: auto;
 
   .card {
-    margin: 20px;
+    margin: 1em;
+
+    .space {
+      margin: 0.75em 0;
+    }
   }
 }
 

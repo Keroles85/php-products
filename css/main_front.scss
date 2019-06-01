@@ -54,5 +54,12 @@
 }
 
 @media screen and (max-width: 768px) {
-  
+  .items {
+    flex-direction: column;
+    align-items: center;
+
+    .card {
+      margin-bottom: 1rem;
+    }
+  }
 }

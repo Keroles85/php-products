@@ -143,6 +143,7 @@ function getCategories() {
 
         <h1>Edit <?php echo $type ?></h1>
         
+        <!-- update product form -->
         <?php if ($type == 'product'): ?>
         <form action="" method="post" enctype="multipart/form-data">
           <div class="form-group">
@@ -172,13 +173,13 @@ function getCategories() {
           <div class="form-group">
             <label>Select new photo (optional)</label>
             <input type="file" class="form-control-file" name="image" id="image" value="<?= $imgURL ?>">
-            <div style="padding-top: 10px;"><img src="<?= $imgURL ?>" class="img-thumbnail" alt=""></div>
+            <div style="padding-top: 10px;"><img src="../<?= $imgURL ?>" class="img-thumbnail" alt=""></div>
           </div>
           <button class="btn btn-primary" name="btn_update">Update</button>
         </form>
 
+        <!-- update category form -->
         <?php else: ?>
-
         <form action="" method="post">
           <div class="form-group">
             <label for="name">Category Name</label>

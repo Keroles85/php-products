@@ -3,7 +3,10 @@
   margin: auto;
 }
 .wrapper .card {
-  margin: 20px;
+  margin: 1em;
+}
+.wrapper .card .space {
+  margin: 0.75em 0;
 }
 
 /*# sourceMappingURL=product.css.map */
