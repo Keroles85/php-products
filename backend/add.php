@@ -6,13 +6,14 @@ require_once 'config.php';
 $addType = $_GET['type'];
 
 //get all categories if user is adding product
-if ($addType == 'product') getCategories();
+if ($addType == 'product') $categories = getCategories();
  
 //get categories function to show in dropdown menu
 function getCategories() {
-  global $db, $categories;
+  global $db;
   $categories = $db->query("select * from categories");
   unset($db);
+  return $categories;
 }
 
 /** 
@@ -118,9 +119,9 @@ if (isset($_POST['btn_add'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="../css/bootstrap.min.css"> <!-- bootstrap -->
-  <link rel="stylesheet" href="../css/all.min.css"> <!-- fontaweson -->
-  <link rel="stylesheet" href="../css/main.css"> <!-- my-style -->
+  <link rel="stylesheet" href="../style/css/bootstrap.min.css"> <!-- bootstrap -->
+  <link rel="stylesheet" href="../style/css/all.min.css"> <!-- fontaweson -->
+  <link rel="stylesheet" href="../style/css/main.css"> <!-- my-style -->
   <title>Add product page</title>
 </head>
 <body>

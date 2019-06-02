@@ -19,9 +19,9 @@ function getCategories() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>PHP Products Home Page</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css"> <!-- bootstrap -->
-  <link rel="stylesheet" href="css/all.min.css"> <!-- fontaweson -->
-  <link rel="stylesheet" href="css/categories.css"> <!-- my-style -->
+  <link rel="stylesheet" href="style/css/bootstrap.min.css"> <!-- bootstrap -->
+  <link rel="stylesheet" href="style/css/all.min.css"> <!-- fontaweson -->
+  <link rel="stylesheet" href="style/css/categories.css"> <!-- my-style -->
 </head>
 <body>
 <div class="wrapper">

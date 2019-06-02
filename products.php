@@ -2,12 +2,17 @@
 
 require_once 'backend/config.php';
 
-getCategories();
+$id = $_GET['cat_id'];
 
-function getCategories() {
-  global $db, $categories;
-  $sql = 'select * from categories';
-  $categories = $db -> query($sql);
+getProducts();
+
+function getProducts() {
+  global $db, $id, $products, $category;
+  $sql = "select products.*, images.image_url from products inner join images
+    on images.product_id = products.id where products.cat_id = $id";
+  $cat_sql = "select name from categories where id = $id";
+  $products = $db -> query($sql);
+  $category = $db -> query($cat_sql) ->fetch();
 }
 
 ?>
@@ -19,9 +24,9 @@ function getCategories() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>PHP Products Home Page</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css"> <!-- bootstrap -->
-  <link rel="stylesheet" href="css/all.min.css"> <!-- fontaweson -->
-  <link rel="stylesheet" href="css/categories.css"> <!-- my-style -->
+  <link rel="stylesheet" href="style/css/bootstrap.min.css"> <!-- bootstrap -->
+  <link rel="stylesheet" href="style/css/all.min.css"> <!-- fontaweson -->
+  <link rel="stylesheet" href="style/css/products.css"> <!-- my-style -->
 </head>
 <body>
 <div class="wrapper">
@@ -29,7 +34,30 @@ function getCategories() {
   <header class="nav_bar"></header>
 
   <section class="main-section">
-    <h1>Products Page</h1>
+    <h1><?= $category['name'] ?></h1>
+
+    <!-- show all products -->
+    <?php foreach($products as $product): ?>
+    <a href="product.php?id=<?= $product['id'] ?>">
+      <div class="card mb-3">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <img src="<?= $product['image_url'] ?>" class="card-img" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><?= $product['name'] ?></h5>
+              <p class="card-text">
+                <?= $product['description'] ?>
+              </p>
+              <p class="card-text"><small class="text-muted"><?= $product['price'] ?></small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    <?php endforeach; ?>
+    
   </section>
 
 </div>

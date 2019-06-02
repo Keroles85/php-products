@@ -8,7 +8,7 @@ $name = $description = $price = $catID = $imgURL = '';
 //check for edit type (product, category)
 if ($type == 'product') {
   getProduct($id); //get product for selected product id
-  getCategories(); //get all categories
+  $categories = getCategories(); //get all categories
 } else {
   getCategory($id); //get category for selected category id
 }
@@ -26,10 +26,20 @@ if (isset($_POST['btn_update'])) {
 }
 
 /**
-* edit product function 
+* UPDATE PRODUCT FUNCTIONS
  */
-function editProduct($id) {
 
+//get product by id to display in form function
+function getProduct($id) {
+  global $db;
+  $products = $db -> query("select img.image_url, pdt.*  
+    from images as img inner join products as pdt on img.product_id = pdt.id 
+    where pdt.id=$id");
+  unset($db);
+  return $products;
+}
+
+function editProduct($id) {
   //set variables for sql update
   global $db;
   $name = $_POST['name'];
@@ -53,6 +63,11 @@ function editProduct($id) {
   }
 }
 
+
+/** 
+ * HANDLING IMAGE UPLOAD
+*/
+
 //update image table function
 function updateImg($id) {
   global $db;
@@ -73,25 +88,9 @@ function uploadFile($file) {
   return $imgURL;
 }
 
-//get product by id to display in form function
-function getProduct($id) {
-  global $db, $name, $description, $price, $catID, $imgURL;
-  $products = $db -> query("select img.image_url, pdt.*  
-    from images as img inner join products as pdt on img.product_id = pdt.id 
-    where pdt.id=$id");
-  foreach ($products as $product) {
-    $name = $product['name'];
-    $description = $product['description'];
-    $price = $product['price'];
-    $catID = $product['cat_id'];
-    $imgURL = $product['image_url'];
-  }
-
-  unset($db);
-}
 
 /** 
-* edit category functions
+* UPDATE CATEGORIES FUNCTIONS
  */
 function editCategory($id) {
   global $db;
@@ -105,20 +104,18 @@ function editCategory($id) {
 
 //get category by id to display in form function
 function getCategory($id) {
-  global $db, $name, $description;
+  global $db;
   $categories = $db -> query("select * from categories where id = $id");
-  foreach($categories as $category) {
-    $name = $category['name'];
-    $description = $category['description'];
-  }
   unset($db);
+  return $categories;
 }
 
 //get all categories when editing product
 function getCategories() {
-  global $db, $categories;
+  global $db;
   $categories = $db->query("select * from categories");
   unset($db);
+  return $categories;
 }
 
 ?>
@@ -130,9 +127,9 @@ function getCategories() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Add product page</title>
-  <link rel="stylesheet" href="../css/bootstrap.min.css"> <!-- bootstrap -->
-  <link rel="stylesheet" href="../css/all.min.css"> <!-- fontaweson -->
-  <link rel="stylesheet" href="../css/main.css"> <!-- my-style -->
+  <link rel="stylesheet" href="../style/css/bootstrap.min.css"> <!-- bootstrap -->
+  <link rel="stylesheet" href="../style/css/all.min.css"> <!-- fontaweson -->
+  <link rel="stylesheet" href="../style/css/main.css"> <!-- my-style -->
 </head>
 <body>
   <div class="container-fluid">
@@ -145,54 +142,64 @@ function getCategories() {
         
         <!-- update product form -->
         <?php if ($type == 'product'): ?>
+        <?php 
+          $products = getProduct($id);
+          foreach($products as $product):
+        ?>
         <form action="" method="post" enctype="multipart/form-data">
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" value="<?= $name ?>">
+            <input type="text" name="name" id="name" class="form-control" value="<?= $product['name'] ?>">
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10" class="form-control" ><?= $description ?></textarea>
+            <textarea name="description" id="description" cols="30" rows="10" class="form-control" ><?= $product['description'] ?></textarea>
           </div>
           <div class="form-group">
             <label for="price">Price</label>
-            <input type="text" name="price" id="price" class="form-control" value="<?= $price ?>">
+            <input type="text" name="price" id="price" class="form-control" value="<?= $product['price'] ?>">
           </div>
           <div class="form-group">
             <label for="categories">Categories</label>
             <select class="form-control" name="categories" id="categories">
 
               <?php foreach($categories as $category): ?>
-                <option value="<?= $category['id'] ?>" <?= ($category['id'] == $catID)? selected : '' ?>>
+                <option value="<?= $category['id'] ?>" <?= ($category['id'] == $product['cat_id'])? 'selected' : '' ?>>
                   <?= $category['name'] ?>
                 </option>
-              <?php endforeach ?>
+              <?php endforeach; ?>
 
             </select>
           </div>
           <div class="form-group">
             <label>Select new photo (optional)</label>
-            <input type="file" class="form-control-file" name="image" id="image" value="<?= $imgURL ?>">
-            <div style="padding-top: 10px;"><img src="../<?= $imgURL ?>" class="img-thumbnail" alt=""></div>
+            <input type="file" class="form-control-file" name="image" id="image">
+            <div style="padding-top: 10px;"><img src="../<?= $product['image_url'] ?>" class="img-thumbnail" alt=""></div>
           </div>
           <button class="btn btn-primary" name="btn_update">Update</button>
         </form>
-
+        <?php endforeach; ?>
+        
         <!-- update category form -->
         <?php else: ?>
+        <?php 
+          $categories = getCategory($id);
+          foreach($categories as $category):
+        ?>
         <form action="" method="post">
           <div class="form-group">
             <label for="name">Category Name</label>
-            <input type="text" name="name" id="name" class="form-control" value="<?=$name ?>">
+            <input type="text" name="name" id="name" class="form-control" value="<?= $category['name'] ?>">
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10" class="form-control"><?= $description ?></textarea>
+            <textarea name="description" id="description" cols="30" rows="10" class="form-control"><?= $category['description'] ?></textarea>
           </div>
 
           <button class="btn btn-primary" name="btn_update">Update</button>
         </form>
 
+        <?php endforeach; ?>
         <?php endif; ?>
       </div>
     </section>

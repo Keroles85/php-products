@@ -4,8 +4,8 @@ require_once 'config.php';
 if (isset($_GET['cat'])) $catID = $_GET['cat'];
 
 function getProducts() {
-  global $catID;
-  global $db, $products, $catID;
+  global $catID, $db;
+  $products = '';
   if (!isset($catID) || $catID == 'all') {
     $products = $db -> query("select prds.id, prds.name as product_name, prds.description, prds.price, 
     cat.id as cat_id, cat.name as cat_name, img.image_url from 
@@ -18,18 +18,19 @@ function getProducts() {
     inner join images as img on prds.id = img.product_id where cat_id = $catID");
   }
   
-  
+  return $products;
   //unset($db);//close connection
 }
 
 function getCategories() {
-  global $db, $categories;
+  global $db;
   $categories = $db -> query ('select * from categories');
   unset($db);//close connection
+  return $categories;
 }
 
-getProducts();
-getCategories();
+$products = getProducts();
+$categories = getCategories();
 
 ?>
 
@@ -40,9 +41,9 @@ getCategories();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>PHP Products Home Page</title>
-  <link rel="stylesheet" href="../css/bootstrap.min.css"> <!-- bootstrap -->
-  <link rel="stylesheet" href="../css/all.min.css"> <!-- fontaweson -->
-  <link rel="stylesheet" href="../css/main.css"> <!-- my-style -->
+  <link rel="stylesheet" href="../style/css/bootstrap.min.css"> <!-- bootstrap -->
+  <link rel="stylesheet" href="../style/css/all.min.css"> <!-- fontaweson -->
+  <link rel="stylesheet" href="../style/css/main.css"> <!-- my-style -->
 </head>
 <body>
 

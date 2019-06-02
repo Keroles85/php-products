@@ -20,7 +20,40 @@
           <a class="nav-link" href="#">About us</a>
         </li>
       </ul>
-      <button class="btn"><i class="fas fa-user"></i></button>
+
+      <div class="dropdown">
+          <button class="btn" data-toggle="dropdown"><i class="fas fa-user"></i></button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" id="login_btn" href="#">Login</a>
+          <a class="dropdown-item" id="register_btn" href="#">Register</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </nav>
+
+<!-- Register Modal -->
+<div class="register"></div>
+<!-- Register Modal End -->
+
+<!-- Login Modal -->
+<div class="login"></div>
+<!-- Login Modal End -->
+
+<script>
+  $(document).ready(function() {
+    //load the modal page and show when clicked
+    $('#register_btn').click(function() {
+      $('.register').load('register_modal.php', function () {  
+        $('#registerModal').modal('show');
+      });
+    });
+
+    $('#login_btn').click(function() {
+      $('.login').load('login_modal.php', function () {  
+        $('#loginModal').modal('show');
+      });
+    });
+  });
+</script>

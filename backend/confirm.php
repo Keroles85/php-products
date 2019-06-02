@@ -12,9 +12,9 @@ $queryOk = $_GET['query'];
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="../css/bootstrap.min.css"> <!-- bootstrap -->
-  <link rel="stylesheet" href="../css/all.min.css"> <!-- fontaweson -->
-  <link rel="stylesheet" href="../css/main.css"> <!-- my-style -->
+  <link rel="stylesheet" href="../style/css/bootstrap.min.css"> <!-- bootstrap -->
+  <link rel="stylesheet" href="../style/css/all.min.css"> <!-- fontaweson -->
+  <link rel="stylesheet" href="../style/css/main.css"> <!-- my-style -->
   <title>Confirmation page</title>
   <style>
     .alert {
