@@ -3,21 +3,21 @@
 require_once 'backend/config.php';
 
 function carousel() {
-  global $db, $items, $images, $count;
+  global $db;
   $sql = 'select * from carousel where visible <> 0 order by active desc';
   $items = $db -> query($sql);
-  $images = $db -> query($sql);
-  $count = 0;
   unset($db);
+  return $items;
 }
 
 function getFeatured() {
-  global $db, $featured;
+  global $db;
   $sql = 'select prds.id, prds.name, prds.description, imgs.image_url 
     from products as prds inner join images as imgs on imgs.product_id = prds.id
     where featured = 1';
   $featured = $db -> query($sql);
   unset($db);
+  return $featured;
 }
 
 ?>
@@ -40,22 +40,31 @@ function getFeatured() {
 
   <section class="main-carousel">
 
-    <?php carousel() ?> <!-- call carousel function -->
-
-    <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+    <div id="mainCarousel" class="carousel slide" data-ride="carousel">
       <ol class="carousel-indicators">
         
-          <!-- php loop for slide buttons -->
-          <?php foreach($items as $item): ?>
-            <!-- using PHP shorthand if statment -->
-            <li data-target="#carouselExampleCaptions" data-slide-to="<?= $count ?>" <?= $item['active']? 'class="active"' : '' ?>></li>
-          <?php $count++; endforeach; ?>
+        <!-- php loop for slide buttons -->
+        <?php
+          $count = 0; 
+          $items = carousel();
+          foreach($items as $item): 
+        ?>
+
+        <li data-target="#mainCarousel" data-slide-to="<?= $count ?>" class="<?= $item['active']? 'active' : '' ?>"></li>
+
+        <?php 
+          $count++; 
+          endforeach;
+        ?>
 
       </ol>
       <div class="carousel-inner">
 
       <!-- php loop for slide images -->
-      <?php foreach($images as $image): ?>
+      <?php 
+        $images = carousel();
+        foreach($images as $image): 
+      ?>
         <div class="carousel-item <?= $image['active']? 'active' : '' ?>">
           <img src="<?= $image['img_url'] ?>" class="d-block w-100" alt="...">
           <div class="carousel-caption d-none d-md-block">
@@ -63,28 +72,31 @@ function getFeatured() {
             <p><?= $image['caption'] ?></p>
           </div>
         </div>
+
       <?php endforeach; ?>
 
-
       </div>
-      <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+
+      <a class="carousel-control-prev" href="#mainCarousel" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="sr-only">Previous</span>
       </a>
-      <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+      <a class="carousel-control-next" href="#mainCarousel" role="button" data-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
       </a>
     </div> <!-- .carousel -->
+
   </section>
 
   <section class="main-content">
     <div class="items">
 
-      <?php getFeatured() ?><!-- call featured function -->
-
       <!-- show featured items from database -->
-      <?php foreach($featured as $feat): ?>
+      <?php
+        $featured = getFeatured();
+        foreach($featured as $feat):
+      ?>
       <div class="card" style="width: 21rem;">
         <img src="<?= $feat['image_url'] ?>" class="card-img-top" alt="...">
         <div class="card-body">

@@ -2,17 +2,22 @@
 
 require_once 'backend/config.php';
 
-$id = $_GET['cat_id'];
+$cat_id = $_GET['cat_id'];
 
-getProducts();
-
-function getProducts() {
-  global $db, $id, $products, $category;
+function getProducts($cat_id) {
+  global $db;
   $sql = "select products.*, images.image_url from products inner join images
-    on images.product_id = products.id where products.cat_id = $id";
-  $cat_sql = "select name from categories where id = $id";
+    on images.product_id = products.id where products.cat_id = $cat_id";
   $products = $db -> query($sql);
-  $category = $db -> query($cat_sql) ->fetch();
+  return $products;
+}
+
+function getCategoryName($cat_id) {
+  global $db;
+  $sql = "select name from categories where id = $cat_id";
+  $name = $db -> query($sql);
+  unset($db);
+  return $name -> fetchAll();
 }
 
 ?>
@@ -34,10 +39,18 @@ function getProducts() {
   <header class="nav_bar"></header>
 
   <section class="main-section">
-    <h1><?= $category['name'] ?></h1>
+    <h1>
+      <?php
+        $categoy = getCategoryName($cat_id); 
+        echo $category['name']; 
+      ?>
+    </h1>
 
     <!-- show all products -->
-    <?php foreach($products as $product): ?>
+    <?php
+    $products = getProducts($cat_id); 
+    foreach($products as $product): 
+    ?>
     <a href="product.php?id=<?= $product['id'] ?>">
       <div class="card mb-3">
         <div class="row no-gutters">

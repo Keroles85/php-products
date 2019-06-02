@@ -1,15 +1,14 @@
 <?php
 require_once 'backend/config.php';
 
-$id = $_GET['id'];
-getProduct($id);
+$product_id = $_GET['id'];
 
-function getProduct($id) {
-  global $db, $product;
+function getProduct($product_id) {
+  global $db;
   $sql = "select products.*, images.image_url from products inner join images
-    on images.product_id = products.id where products.id = $id";
+    on images.product_id = products.id where products.id = $product_id";
   $product = $db -> query($sql);
-
+  return $product;
 }
 
 ?>
@@ -33,12 +32,15 @@ function getProduct($id) {
   <section class="main-section">
   <div class="card">
 
-    <?php foreach($product as $items): ?>
-    <img src="<?= $items['image_url'] ?>" class="card-img-top" alt="Product Image">
+    <?php 
+    $product = getProduct($product_id);
+    foreach($product as $details): 
+    ?>
+    <img src="<?= $details['image_url'] ?>" class="card-img-top" alt="Product Image">
     <div class="card-body">
-      <h5 class="card-title"><?= $items['name'] ?></h5>
-      <div class="space">Price: <b><?= $items['price'] ?></b></div>
-      <div class="card-text space"><?= $items['description'] ?></div>
+      <h5 class="card-title"><?= $details['name'] ?></h5>
+      <div class="space">Price: <b><?= $details['price'] ?></b></div>
+      <div class="card-text space"><?= $details['description'] ?></div>
       <div class="space">
         <button class="btn btn-primary">Add to cart</button>
         <button class="btn btn-secondary">Save to list</button>

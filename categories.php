@@ -2,12 +2,11 @@
 
 require_once 'backend/config.php';
 
-getCategories();
-
 function getCategories() {
-  global $db, $categories;
+  global $db;
   $sql = 'select * from categories';
   $categories = $db -> query($sql);
+  return $categories;
 }
 
 ?>
@@ -32,7 +31,10 @@ function getCategories() {
     <h1 style="margin: 15px;">Choose category...</h1>
 
     <!-- get categories items -->
-    <?php foreach($categories as $category):  ?>
+    <?php 
+    $categories = getCategories();
+    foreach($categories as $category): 
+    ?>
     <a href="products.php?cat_id=<?= $category['id'] ?>">
       <div class="jumbotron jumbotron-fluid">
         <div class="container">
