@@ -1,6 +1,8 @@
 <?php
+
 $queryOK = $_GET['query'];
 $action = $_GET['action'];
+
 ?>
 
 <!DOCTYPE html>

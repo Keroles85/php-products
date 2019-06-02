@@ -1,11 +1,14 @@
 <?php
 
-require_once 'backend/config.php';
+function dbConnect() {
+  require 'backend/config.php';
+  return $db;
+}
 
 $cat_id = $_GET['cat_id'];
 
 function getProducts($cat_id) {
-  global $db;
+  $db = dbConnect();
   $sql = "select products.*, images.image_url from products inner join images
     on images.product_id = products.id where products.cat_id = $cat_id";
   $products = $db -> query($sql);
@@ -13,7 +16,7 @@ function getProducts($cat_id) {
 }
 
 function getCategoryName($cat_id) {
-  global $db;
+  $db = dbConnect();
   $sql = "select name from categories where id = $cat_id";
   $name = $db -> query($sql);
   unset($db);

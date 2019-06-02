@@ -1,11 +1,14 @@
 <?php
-require_once 'config.php';
+// include config file
+function dbConnect() {
+  require 'config.php';
+  return $db;
+}
 
 if (isset($_GET['cat'])) $catID = $_GET['cat'];
 
-function getProducts() {
-  global $catID, $db;
-  $products = '';
+function getProducts($catID) {
+  $db = dbConnect();
   if (!isset($catID) || $catID == 'all') {
     $products = $db -> query("select prds.id, prds.name as product_name, prds.description, prds.price, 
     cat.id as cat_id, cat.name as cat_name, img.image_url from 
@@ -19,17 +22,16 @@ function getProducts() {
   }
   
   return $products;
-  //unset($db);//close connection
 }
 
 function getCategories() {
-  global $db;
+  $db = dbConnect();
   $categories = $db -> query ('select * from categories');
   unset($db);//close connection
   return $categories;
 }
 
-$products = getProducts();
+$products = getProducts($catID);
 $categories = getCategories();
 
 ?>

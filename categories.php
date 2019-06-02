@@ -1,9 +1,12 @@
 <?php
 
-require_once 'backend/config.php';
+function dbConnect() {
+  require 'backend/config.php';
+  return $db;
+}
 
 function getCategories() {
-  global $db;
+  $db = dbConnect();
   $sql = 'select * from categories';
   $categories = $db -> query($sql);
   return $categories;

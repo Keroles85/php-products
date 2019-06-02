@@ -1,10 +1,14 @@
 <?php
-require_once 'backend/config.php';
 
 $product_id = $_GET['id'];
 
+function dbConnect() {
+  require 'backend/config.php';
+  return $db;
+}
+
 function getProduct($product_id) {
-  global $db;
+  $db = dbConnect();
   $sql = "select products.*, images.image_url from products inner join images
     on images.product_id = products.id where products.id = $product_id";
   $product = $db -> query($sql);

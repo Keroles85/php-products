@@ -1,9 +1,12 @@
 <?php
 
-require_once 'backend/config.php';
+function dbConnect() {
+  require 'backend/config.php';
+  return $db;
+}
 
 function carousel() {
-  global $db;
+  $db = dbConnect();
   $sql = 'select * from carousel where visible <> 0 order by active desc';
   $items = $db -> query($sql);
   unset($db);
@@ -11,7 +14,7 @@ function carousel() {
 }
 
 function getFeatured() {
-  global $db;
+  $db = dbConnect();
   $sql = 'select prds.id, prds.name, prds.description, imgs.image_url 
     from products as prds inner join images as imgs on imgs.product_id = prds.id
     where featured = 1';

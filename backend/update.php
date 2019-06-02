@@ -1,5 +1,4 @@
 <?php
-require_once 'config.php';
 
 $type = $_GET['type'];
 $id = $_GET['id'];
@@ -25,13 +24,19 @@ if (isset($_POST['btn_update'])) {
   }
 }
 
+// include config file
+function dbConnect() {
+  require 'config.php';
+  return $db;
+}
+
 /**
 * UPDATE PRODUCT FUNCTIONS
  */
 
 //get product by id to display in form function
 function getProduct($id) {
-  global $db;
+  $db = dbConnect();
   $products = $db -> query("select img.image_url, pdt.*  
     from images as img inner join products as pdt on img.product_id = pdt.id 
     where pdt.id=$id");
@@ -41,7 +46,7 @@ function getProduct($id) {
 
 function editProduct($id) {
   //set variables for sql update
-  global $db;
+  $db = dbConnect();
   $name = $_POST['name'];
   $description = $_POST['description'];
   $price = $_POST['price'];
@@ -70,7 +75,7 @@ function editProduct($id) {
 
 //update image table function
 function updateImg($id) {
-  global $db;
+  $db = dbConnect();
   $imgURL = uploadFile($_FILES['image']);
   $update_img_sql = "update images set image_url = '$imgURL' where product_id = $id";
   $db -> exec($update_img_sql);
@@ -93,7 +98,7 @@ function uploadFile($file) {
 * UPDATE CATEGORIES FUNCTIONS
  */
 function editCategory($id) {
-  global $db;
+  $db = dbConnect();
   $name = $_POST['name'];
   $description = $_POST['description'];
   $sql = "update categories set name = '$name', description = '$description' where id = $id";
@@ -104,7 +109,7 @@ function editCategory($id) {
 
 //get category by id to display in form function
 function getCategory($id) {
-  global $db;
+  $db = dbConnect();
   $categories = $db -> query("select * from categories where id = $id");
   unset($db);
   return $categories;
@@ -112,7 +117,7 @@ function getCategory($id) {
 
 //get all categories when editing product
 function getCategories() {
-  global $db;
+  $db = dbConnect();
   $categories = $db->query("select * from categories");
   unset($db);
   return $categories;

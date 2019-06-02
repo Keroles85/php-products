@@ -1,5 +1,9 @@
 <?php
-require_once 'config.php';
+// include config file
+function dbConnect() {
+  require 'config.php';
+  return $db;
+}
 
 
 ?>

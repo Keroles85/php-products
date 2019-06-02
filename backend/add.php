@@ -1,16 +1,20 @@
 <?php
-// include config file
-require_once 'config.php';
 
 //get the add type
 $addType = $_GET['type'];
 
 //get all categories if user is adding product
 if ($addType == 'product') $categories = getCategories();
+
+// include config file
+function dbConnect() {
+  require 'config.php';
+  return $db;
+}
  
 //get categories function to show in dropdown menu
 function getCategories() {
-  global $db;
+  $db = dbConnect();
   $categories = $db->query("select * from categories");
   unset($db);
   return $categories;
@@ -20,7 +24,7 @@ function getCategories() {
 * add product section
  */
 function addProduct() {
-  global $db;
+  $db = dbConnect();
   $name = $_POST['name'];
   $description = $_POST['description'];
   $price = $_POST['price'];
@@ -41,7 +45,7 @@ function addProduct() {
 
 //insert image in images table function
 function insertImg($id) {
-  global $db;
+  $db = dbConnect();
   $imgURL = uploadFile($_FILES['image']);
   $insert_img_sql = "insert into images (product_id, image_url) values ($id, '$imgURL')";
   $db -> exec($insert_img_sql);
@@ -62,7 +66,7 @@ function uploadFile($file) {
 * add category section
  */
 function addCategory() {
-  global $db;
+  $db = dbConnect();
   $name = $_POST['name'];
   $description = $_POST['description'];
   $sql = "insert into categories (name, description) values ('$name', '$description')";
@@ -75,7 +79,7 @@ function addCategory() {
 * add carousel section
  */
 function addCarousel() {
-  global $db;
+  $db = dbConnect();
   $title = $_POST['title'];
   $caption = $_POST['caption'];
   $active = isset($_POST['active'])? 1 : 0;
@@ -89,12 +93,11 @@ function addCarousel() {
 
 //check if there's active item in carousel
 function getActive() {
-  global $db;
+  $db = dbConnect();
   $active = $db -> query("select * from carousel where active = 1") -> rowCount();
   return $active;
   unset($db);
 }
-
 
 //check which function when add button is submitted
 if (isset($_POST['btn_add'])) {

@@ -1,39 +1,16 @@
 <?php
 session_start();
-require_once 'backend/config.php';
+
+function dbConnect() {
+  require 'backend/config.php';
+  return $db;
+}
 
 if (isset($_POST['register_btn'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $address = $_POST['address'];
     $errors = [];
-
-    if($email == '') {
-        $errors[] = 'Email required';
-    } else if (!strpos($email, '@')) {
-        $errors[] = 'Please enter valid email';
-    }
-
-    if($password == '') {
-        $errors[] = "Password required";
-    } else if (strlen($password) < 6) {
-        $errors[] = "Password must be at least 6 characters";
-    }
-
-    if($address == '') {
-        $errors[] = 'Address required';
-    }
-
-    if(count($errors) == 0) {
-        $password = md5($password);
-        $sql = "insert into users (email, password, address) values (?, ?, ?)";
-        $stmt = $db -> prepare($sql);
-        $stmt -> execute([$email, $password, $address]);
-        $queryOk = $stmt -> rowCount();
-        //var_dump($stmt);
-        header('location: confirm.php?action=Register&query='. $queryOk);
-    }
-
 } elseif (isset($_POST['login_btn'])) {
     $email = $_POST['email'];
     $password = md5($_POST['password']);

@@ -1,10 +1,13 @@
 <?php
 // include config file
-require_once 'config.php';
+function dbConnect() {
+  require 'config.php';
+  return $db;
+}
  
 //get categories function to show in dropdown menu
 function getCategories() {
-  global $db;
+  $db = dbConnect();
   $categories = $db->query("select * from categories");
   unset($db);
   return $categories;
