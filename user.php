@@ -6,26 +6,43 @@ function dbConnect() {
   return $db;
 }
 
+// check if user is registerting or loggin in
 if (isset($_POST['register_btn'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $address = $_POST['address'];
-    $errors = [];
+  register();
 } elseif (isset($_POST['login_btn'])) {
-    $email = $_POST['email'];
-    $password = md5($_POST['password']);
+  login();
+}
 
-    $sql = "select * from users where email = ? and password = ?";
-    $result = $db -> prepare($sql);
-    $result -> execute([$email, $password]);
+function register() {
+  $db = dbConnect();
+  $firstName = $_POST['first_name'];
+  $lastName = $_POST['last_name'];
+  $email = $_POST['email'];
+  $password = md5($_POST['password']);
+  $sql = "insert into users (first_name, last_name, email, password) values (?, ?, ?, ?)"; //using positional placeholders
+  $stmt = $db -> prepare($sql);
+  $stmt -> execute([$firstName, $lastName, $email, $password]);
+  $inserted = $stmt -> rowCount();
+  header('location: confirm.php?action=register&query='.$inserted);
+}
 
-    if($result -> rowCount() > 0) {
-        $_SESSION['user'] = $user;
-        $user = $result -> fetch(PDO::FETCH_ASSOC);//get user into associative array
-        header("location: index.php");
-    } else {
-        echo "Username / Password incorrect";
-    }
+function login() {
+  $db = dbConnect();
+  $email = $_POST['email'];
+  $password = md5($_POST['password']);
+
+  $sql = "select * from users where email = :email and password = :password"; //using named placeholders
+  $stmt = $db -> prepare($sql);
+  $stmt -> execute(['email' => $email, 'password' => $password]);
+  $queryOk = $stmt -> rowCount();
+
+  if($queryOk > 0) {
+    $user = $stmt -> fetch(PDO::FETCH_ASSOC);//get user into associative array
+    $_SESSION['user'] = $user;
+    header("location: confirm.php?action=Login&query=$queryOk");
+  } else {
+    echo "Username / Password incorrect";
+  }
 }
 
 ?>
@@ -47,17 +64,17 @@ if (isset($_POST['register_btn'])) {
 
   <header class="nav_bar"></header>
 
-    <section class="main-content">
-        <?php if(count($errors) > 0): ?>
-        <div class="alert alert-danger errors">
-            <ul>
-                <?php foreach($errors as $error): ?>
-                <li><?= $error ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-        <?php endif; ?>
-    </section>
+  <section class="main-content">
+    <?php if(count($errors) > 0): ?>
+    <div class="alert alert-danger errors">
+      <ul>
+        <?php foreach($errors as $error): ?>
+        <li><?= $error ?></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+    <?php endif; ?>
+  </section>
 
 </div>
 

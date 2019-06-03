@@ -11,20 +11,22 @@
 
       <div class="modal-body" style="text-align: left">
         <form action="user.php" method="post">
-          <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          <div class="row" style="margin-bottom: 1rem">
+            <div class="col">
+              <input type="text" name="first_name" class="form-control" placeholder="First name">
+            </div>
+            <div class="col">
+              <input type="text" name="last_name"class="form-control" placeholder="Last name">
+            </div>
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
+            <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+          </div>
+          <div class="form-group">
             <input type="password" class="form-control" id="password" name="password" placeholder="Password">
           </div>
-          <div class="form-group">
-            <label for="address">Address</label>
-            <textarea name="address" id="address" cols="30" rows="10" class="form-control"></textarea>
-          </div>
-          <button type="submit" name="register_btn" class="btn btn-primary">Register</button>
+          <button type="submit" name="register_btn" class="btn btn-success">Sign Up</button>
         </form>
       </div>
 

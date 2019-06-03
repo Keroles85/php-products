@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <a class="navbar-brand" href="http://localhost/Assignment/php-products/" title="Furniture Home">
@@ -22,15 +26,27 @@
       </ul>
 
       <div class="dropdown">
-          <button class="btn" data-toggle="dropdown"><i class="fas fa-user"></i></button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <a class="dropdown-item" id="login_btn" href="#">Login</a>
-          <a class="dropdown-item" id="register_btn" href="#">Register</a>
-        </div>
-      </div>
+        <button class="btn dropdown-toggle" id="userMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-user"></i>
+        </button>
 
-    </div>
-  </div>
+        <!-- check if user logged in -->
+        <?php if (!isset($_SESSION['user'])): ?>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenuButton">
+            <a class="dropdown-item" id="login_btn" href="#">Login</a>
+            <a class="dropdown-item" id="register_btn" href="#">Signup</a>
+          </div>
+        <?php else: ?>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenuButton">
+            <a class="dropdown-item" id="account_btn" href="#">My Account</a>
+            <a class="dropdown-item" id="cart_btn" href="#">View Cart</a>
+            <a class="dropdown-item" id="cart_btn" href="logout.php">Logout</a>
+          </div>
+        <?php endif; ?>
+
+      </div> <!-- .dropdown end -->
+    </div> <!-- .navbar-collapse end -->
+  </div> <!-- .container end -->
 </nav>
 
 <!-- Register Modal -->

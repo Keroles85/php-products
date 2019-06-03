@@ -34,6 +34,7 @@ $count = 0;
         <h1>Carousel control page</h1>
 
         <a href='add.php?type=carousel' class="btn btn-success" style="margin: 0 0 2em 1em;">Add New Item</a>
+        <button class="btn btn-primary" style="margin: 0 0 2em;">Update Status</button>
 
         <table class="table">
           <thead>
@@ -43,7 +44,7 @@ $count = 0;
               <th scope="col">Image URL</th>
               <th scope="col">Visible</th>
               <th scope="col">Active</th>
-              <th scope="col"></th>
+              <th scope="col" colspan="2" style="padding-left: 25px">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -52,10 +53,10 @@ $count = 0;
 
           <tr>
             <th scope="row">
-              <input type="text" value="<?= $item['title'] ?>">
+              <?= $item['title'] ?>
             </th>
             <td>
-              <textarea rows="5" cols="25"><?= $item['caption'] ?></textarea>
+              <?= $item['caption'] ?>
             </td>
             <td><img src="../<?= $item['img_url'] ?>" class="img-thumbnail"></td>
             <td>
@@ -65,6 +66,11 @@ $count = 0;
               <input type="radio" name="active" <?= $item['active']? 'checked' : ''; ?>>
               </td>
             <td>
+              <a href="update.php?type=carousel&id=<?= $item['id'] ?>" title="Update Record">
+                <i class="fas fa-pen"></i>
+              </a>
+            </td>
+            <td>
               <a href="delete.php?id=<?= $item['id'] ?>" class="btn btn-danger">
                 <i class="fas fa-trash"></i>
               </a>
@@ -72,12 +78,6 @@ $count = 0;
           </tr>
 
           <?php endforeach ?>
-
-          <tr>
-            <td style="border-top: none;">
-              <button class="btn btn-primary">Update</button>
-            </td>
-          </tr>
 
           </tbody>
         </table>

@@ -1,11 +1,17 @@
 <?php
+session_start();
 // include config file
 function dbConnect() {
   require 'config.php';
   return $db;
 }
 
-
+//check if user is logged in and if user is admin
+if(!isset($_SESSION['user'])) {
+  header('location: http://localhost/Assignment/php-products/');
+} else {
+  
+}
 ?>
 
 <!DOCTYPE html>
