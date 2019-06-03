@@ -8,7 +8,7 @@ function dbConnect() {
 //get categories function to show in dropdown menu
 function getCategories() {
   $db = dbConnect();
-  $categories = $db->query("select * from categories");
+  $categories = $db->query("SELECT * FROM categories");
   unset($db);
   return $categories;
 }

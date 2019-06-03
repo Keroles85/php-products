@@ -7,7 +7,7 @@ function dbConnect() {
 
 function carousel() {
   $db = dbConnect();
-  $sql = 'select * from carousel where visible <> 0 order by active desc';
+  $sql = 'SELECT * FROM carousel WHERE visible <> 0 ORDER BY active DESC';
   $items = $db -> query($sql);
   unset($db);
   return $items;
@@ -15,9 +15,9 @@ function carousel() {
 
 function getFeatured() {
   $db = dbConnect();
-  $sql = 'select prds.id, prds.name, prds.description, imgs.image_url 
-    from products as prds inner join images as imgs on imgs.product_id = prds.id
-    where featured = 1';
+  $sql = 'SELECT prds.id, prds.name, prds.description, imgs.image_url 
+    FROM products AS prds INNER JOIN images AS imgs ON imgs.product_id = prds.id
+    WHERE featured = 1';
   $featured = $db -> query($sql);
   unset($db);
   return $featured;

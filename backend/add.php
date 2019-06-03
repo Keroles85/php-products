@@ -31,12 +31,12 @@ function addProduct() {
   $category = $_POST['categories'];
 
   //insert sql to add new product
-  $insert_sql = "insert into products (name, price, description, cat_id) VALUES
+  $insert_sql = "INSERT INTO products (name, price, description, cat_id) VALUES
     ('$name', $price, '$description', $category)";
   $stmt = $db -> exec($insert_sql);
 
   //get product added id to add to images table
-  $getID = $db -> query("select id from products where id=LAST_INSERT_ID()") -> fetch();
+  $getID = $db -> query("SELECT id FROM products WHERE id=LAST_INSERT_ID()") -> fetch();
   insertImg($getID['id']);
   unset($db);//close connection
 
@@ -47,7 +47,7 @@ function addProduct() {
 function insertImg($id) {
   $db = dbConnect();
   $imgURL = uploadFile($_FILES['image']);
-  $insert_img_sql = "insert into images (product_id, image_url) values ($id, '$imgURL')";
+  $insert_img_sql = "INSERT INTO images (product_id, image_url) VALUES ($id, '$imgURL')";
   $db -> exec($insert_img_sql);
 }
 
@@ -69,7 +69,7 @@ function addCategory() {
   $db = dbConnect();
   $name = $_POST['name'];
   $description = $_POST['description'];
-  $sql = "insert into categories (name, description) values ('$name', '$description')";
+  $sql = "INSERT INTO categories (name, description) VALUES ('$name', '$description')";
   $stmt = $db -> exec($sql);
   unset($db);//close connection
   header('location: confirm.php?action=Category&type=add&query='.$stmt);
@@ -85,8 +85,8 @@ function addCarousel() {
   $active = isset($_POST['active'])? 1 : 0;
   $visible = isset($_POST['visible'])? 1 : 0;
   $imgURL = uploadFile($_FILES['image']);
-  $sql = "insert into carousel (title, caption, img_url, active, visible) 
-        values ('$title', '$caption', '$imgURL', $active, $visible)";
+  $sql = "INSERT INTO carousel (title, caption, img_url, active, visible) 
+        VALUES ('$title', '$caption', '$imgURL', $active, $visible)";
   $stmt = $db -> exec($sql);
   header('location: confirm.php?action=Carousel%20Item&type=add&query='.$stmt);
 }
@@ -94,7 +94,7 @@ function addCarousel() {
 //check if there's active item in carousel
 function getActive() {
   $db = dbConnect();
-  $active = $db -> query("select * from carousel where active = 1") -> rowCount();
+  $active = $db -> query("SELECT * FROM carousel WHERE active = 1") -> rowCount();
   return $active;
   unset($db);
 }

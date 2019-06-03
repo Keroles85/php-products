@@ -37,9 +37,9 @@ function dbConnect() {
 //get product by id to display in form function
 function getProduct($id) {
   $db = dbConnect();
-  $products = $db -> query("select img.image_url, pdt.*  
-    from images as img inner join products as pdt on img.product_id = pdt.id 
-    where pdt.id=$id");
+  $products = $db -> query("SELECT img.image_url, pdt.*  
+    FROM images AS img INNER JOIN products AS pdt ON img.product_id = pdt.id 
+    WHERE pdt.id=$id");
   unset($db);
   return $products;
 }
@@ -54,14 +54,14 @@ function editProduct($id) {
 
   //check if user is updating photo
   if (!is_uploaded_file($_FILES['image']['tmp_name'])) {
-    $sql = "update products set name = '$name', price = $price, description = '$description', cat_id = $catID where id = $id";
+    $sql = "UPDATE products SET name = '$name', price = $price, description = '$description', cat_id = $catID WHERE id = $id";
     $stmt = $db -> exec($sql);
     unset($db);//close connection
     header('location: confirm.php?action=Product&type=update&query='.$stmt);
   //if user is updating the photo
   } else {
     $queryOk = 0;
-    $sql = "update products set name = '$name', price = $price, description = '$description', cat_id = $catID where id = $id";
+    $sql = "UPDATE products SET name = '$name', price = $price, description = '$description', cat_id = $catID WHERE id = $id";
     $queryOk = $db -> exec($sql);
     $queryOk = updateImg($id)? 1 : 0;
     header('location: confirm.php?action=Product&type=update&query='.$queryOk);
@@ -77,7 +77,7 @@ function editProduct($id) {
 function updateImg($id) {
   $db = dbConnect();
   $imgURL = uploadFile($_FILES['image']);
-  $update_img_sql = "update images set image_url = '$imgURL' where product_id = $id";
+  $update_img_sql = "UPDATE images SET image_url = '$imgURL' WHERE product_id = $id";
   $db -> exec($update_img_sql);
   unset($db);
   return true; //incase the user only updated the image, need to set flag to 1
@@ -101,7 +101,7 @@ function editCategory($id) {
   $db = dbConnect();
   $name = $_POST['name'];
   $description = $_POST['description'];
-  $sql = "update categories set name = '$name', description = '$description' where id = $id";
+  $sql = "UPDATE categories SET name = '$name', description = '$description' WHERE id = $id";
   $stmt = $db -> exec($sql);
   unset($db);
   header('location: confirm.php?action=Category&type=update&query='.$stmt);
@@ -110,7 +110,7 @@ function editCategory($id) {
 //get category by id to display in form function
 function getCategory($id) {
   $db = dbConnect();
-  $categories = $db -> query("select * from categories where id = $id");
+  $categories = $db -> query("SELECT * FROM categories WHERE id = $id");
   unset($db);
   return $categories;
 }
@@ -118,7 +118,7 @@ function getCategory($id) {
 //get all categories when editing product
 function getCategories() {
   $db = dbConnect();
-  $categories = $db->query("select * from categories");
+  $categories = $db->query("SELECT * FROM categories");
   unset($db);
   return $categories;
 }

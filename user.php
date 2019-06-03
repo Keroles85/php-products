@@ -19,7 +19,7 @@ function register() {
   $lastName = $_POST['last_name'];
   $email = $_POST['email'];
   $password = md5($_POST['password']);
-  $sql = "insert into users (first_name, last_name, email, password) values (?, ?, ?, ?)"; //using positional placeholders
+  $sql = "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)"; //using positional placeholders
   $stmt = $db -> prepare($sql);
   $stmt -> execute([$firstName, $lastName, $email, $password]);
   $inserted = $stmt -> rowCount();
@@ -31,7 +31,7 @@ function login() {
   $email = $_POST['email'];
   $password = md5($_POST['password']);
 
-  $sql = "select * from users where email = :email and password = :password"; //using named placeholders
+  $sql = "SELECT * FROM users WHERE email = :email AND password = :password"; //using named placeholders
   $stmt = $db -> prepare($sql);
   $stmt -> execute(['email' => $email, 'password' => $password]);
   $queryOk = $stmt -> rowCount();

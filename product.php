@@ -9,8 +9,8 @@ function dbConnect() {
 
 function getProduct($product_id) {
   $db = dbConnect();
-  $sql = "select products.*, images.image_url from products inner join images
-    on images.product_id = products.id where products.id = $product_id";
+  $sql = "SELECT products.*, images.image_url FROM products INNER JOIN images
+    ON images.product_id = products.id WHERE products.id = $product_id";
   $product = $db -> query($sql);
   return $product;
 }

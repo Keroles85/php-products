@@ -6,7 +6,7 @@ function dbConnect() {
 }
 
 $db = dbConnect();
-$sql = 'select * from carousel';
+$sql = 'SELECT * FROM carousel';
 $items = $db -> query($sql);
 $images = $db -> query($sql);
 $count = 0;

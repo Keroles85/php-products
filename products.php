@@ -9,15 +9,15 @@ $cat_id = $_GET['cat_id'];
 
 function getProducts($cat_id) {
   $db = dbConnect();
-  $sql = "select products.*, images.image_url from products inner join images
-    on images.product_id = products.id where products.cat_id = $cat_id";
+  $sql = "SELECT products.*, images.image_url FROM products INNER JOIN images
+    ON images.product_id = products.id WHERE products.cat_id = $cat_id";
   $products = $db -> query($sql);
   return $products;
 }
 
 function getCategoryName($cat_id) {
   $db = dbConnect();
-  $sql = "select name from categories where id = $cat_id";
+  $sql = "SELECT name FROM categories WHERE id = $cat_id";
   $name = $db -> query($sql);
   unset($db);
   return $name -> fetchAll();

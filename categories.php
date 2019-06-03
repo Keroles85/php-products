@@ -7,7 +7,7 @@ function dbConnect() {
 
 function getCategories() {
   $db = dbConnect();
-  $sql = 'select * from categories';
+  $sql = 'SELECT * FROM categories';
   $categories = $db -> query($sql);
   return $categories;
 }

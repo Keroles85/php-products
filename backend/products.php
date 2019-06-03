@@ -10,15 +10,15 @@ if (isset($_GET['cat'])) $catID = $_GET['cat'];
 function getProducts($catID) {
   $db = dbConnect();
   if (!isset($catID) || $catID == 'all') {
-    $products = $db -> query("select prds.id, prds.name as product_name, prds.description, prds.price, 
-    cat.id as cat_id, cat.name as cat_name, img.image_url from 
-    products as prds inner join categories as cat on prds.cat_id = cat.id
-    inner join images as img on prds.id = img.product_id order by cat_id, prds.id asc");
+    $products = $db -> query("SELECT prds.id, prds.name AS product_name, prds.description, prds.price, 
+    cat.id AS cat_id, cat.name AS cat_name, img.image_url FROM 
+    products AS prds INNER JOIN categories AS cat ON prds.cat_id = cat.id
+    INNER JOIN images AS img ON prds.id = img.product_id ORDER BY cat_id, prds.id");
   } else {
-    $products = $db -> query("select prds.id, prds.name as product_name, prds.description, prds.price, 
-    cat.id as cat_id, cat.name as cat_name, img.image_url from 
-    products as prds inner join categories as cat on prds.cat_id = cat.id
-    inner join images as img on prds.id = img.product_id where cat_id = $catID");
+    $products = $db -> query("SELECT prds.id, prds.name AS product_name, prds.description, prds.price, 
+    cat.id AS cat_id, cat.name AS cat_name, img.image_url FROM 
+    products AS prds INNER JOIN categories AS cat ON prds.cat_id = cat.id
+    INNER JOIN images AS img ON prds.id = img.product_id WHERE cat_id = $catID");
   }
   
   return $products;
@@ -26,7 +26,7 @@ function getProducts($catID) {
 
 function getCategories() {
   $db = dbConnect();
-  $categories = $db -> query ('select * from categories');
+  $categories = $db -> query ('SELECT * FROM categories');
   unset($db);//close connection
   return $categories;
 }
