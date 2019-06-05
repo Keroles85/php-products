@@ -1,7 +1,6 @@
 <?php
 session_start();
 ?>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <a class="navbar-brand" href="http://localhost/Assignment/php-products/" title="Furniture Home">
@@ -61,13 +60,13 @@ session_start();
   $(document).ready(function() {
     //load the modal page and show when clicked
     $('#register_btn').click(function() {
-      $('.register').load('register_modal.php', function () {  
+      $('.register').load('./includes/register_modal.php', function () {  
         $('#registerModal').modal('show');
       });
     });
 
     $('#login_btn').click(function() {
-      $('.login').load('login_modal.php', function () {  
+      $('.login').load('./includes/login_modal.php', function () {  
         $('#loginModal').modal('show');
       });
     });

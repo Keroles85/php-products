@@ -1,15 +1,37 @@
 <?php
+session_start();
+
+//check if user is logged in and if user is admin
+if(!isset($_SESSION['admin'])) {
+  header('location: login.php');
+}
 
 function dbConnect() {
   require 'config.php';
   return $db;
 }
 
-$db = dbConnect();
-$sql = 'SELECT * FROM carousel';
-$items = $db -> query($sql);
-$images = $db -> query($sql);
-$count = 0;
+//get all carousel items
+function getCarousel() {
+  $db = dbConnect();
+  $sql = 'SELECT * FROM carousel';
+  $items = $db -> query($sql);
+  unset($db);
+  return $items;
+}
+
+function checkActive() {
+  $db = dbConnect();
+  $sql = 'SELECT * FROM carousel WHERE active=1';
+  $stmt = $db -> query($sql);
+  $active = $stmt -> rowCount();
+  return $active;
+}
+
+//update carousel status (visibilty, active)
+function updateStatus() {
+  
+}
 
 ?>
 
@@ -19,13 +41,22 @@ $count = 0;
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Add product page</title>
   <link rel="stylesheet" href="../style/css/bootstrap.min.css"> <!-- bootstrap -->
   <link rel="stylesheet" href="../style/css/all.min.css"> <!-- fontaweson -->
   <link rel="stylesheet" href="../style/css/main.css"> <!-- my-style -->
   <link rel="stylesheet" href="../style/css/carousel.css"> <!-- my-style -->
+  <title>Carousel management page</title>
 </head>
 <body>
+  <!-- Check for active items -->
+  <?php if(!checkActive()):  ?>
+    <script>
+     window.addEventListener('load', function() {
+        alert("There's no active items, must choose active item");
+      });
+    </script>
+  <?php endif; ?>
+
   <div class="container-fluid">
     <div id="nav-section"></div>
 
@@ -49,7 +80,10 @@ $count = 0;
           </thead>
           <tbody>
 
-          <?php foreach($items as $item): ?>
+          <?php 
+            $items = getCarousel();
+            foreach($items as $item): 
+          ?>
 
           <tr>
             <th scope="row">
@@ -60,7 +94,7 @@ $count = 0;
             </td>
             <td><img src="../<?= $item['img_url'] ?>" class="img-thumbnail"></td>
             <td>
-              <input type="checkbox" <?= $item['visible']? 'checked' : ''; ?>>
+              <input type="checkbox" name="visibilty" <?= $item['visible']? 'checked' : ''; ?>>
             </td>
             <td>
               <input type="radio" name="active" <?= $item['active']? 'checked' : ''; ?>>
@@ -71,8 +105,8 @@ $count = 0;
               </a>
             </td>
             <td>
-              <a href="delete.php?id=<?= $item['id'] ?>" class="btn btn-danger">
-                <i class="fas fa-trash"></i>
+              <a onClick="javascript: return confirm('Are you sure?!');" href="delete.php?type=carousel&id=<?= $product['id'] ?>" title="Delete Record">
+                <i class="fas fa-trash-alt" style="color:red"></i>
               </a>
             </td>
           </tr>

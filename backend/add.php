@@ -1,16 +1,22 @@
 <?php
+session_start();
 
-//get the add type
-$addType = $_GET['type'];
-
-//get all categories if user is adding product
-if ($addType == 'product') $categories = getCategories();
+//check if user is logged in and if user is admin
+if(!isset($_SESSION['admin'])) {
+  header('location: login.php');
+}
 
 // include config file
 function dbConnect() {
   require 'config.php';
   return $db;
 }
+
+//get the add type
+$addType = $_GET['type'];
+
+//get all categories if user is adding product
+if ($addType == 'product') $categories = getCategories();
  
 //get categories function to show in dropdown menu
 function getCategories() {
@@ -20,8 +26,9 @@ function getCategories() {
   return $categories;
 }
 
+
 /** 
-* add product section
+* ADD PRODUCT FUNCTION
  */
 function addProduct() {
   $db = dbConnect();
@@ -51,7 +58,6 @@ function insertImg($id) {
   $db -> exec($insert_img_sql);
 }
 
-
 //create a new name for image upload
 function uploadFile($file) {
   //$extension = explode('.', $file['name']);
@@ -62,8 +68,9 @@ function uploadFile($file) {
   return $imgURL;
 }
 
+
 /**
-* add category section
+* ADD CATEGORY FUNCTIONS
  */
 function addCategory() {
   $db = dbConnect();
@@ -75,8 +82,9 @@ function addCategory() {
   header('location: confirm.php?action=Category&type=add&query='.$stmt);
 }
 
+
 /**
-* add carousel section
+* ADD CAROUSEL FUNCTION
  */
 function addCarousel() {
   $db = dbConnect();
@@ -99,6 +107,26 @@ function getActive() {
   unset($db);
 }
 
+
+/** 
+ * ADD USER FUNCTION
+*/
+
+function addUser() {
+  $db = dbConnect();
+  $firstName = $_POST['first_name'];
+  $lastName = $_POST['last_name'];
+  $email = $_POST['email'];
+  $password = md5($_POST['password']);
+  $admin = isset($_POST['admin'])? 1 : 0;
+  $sql = "INSERT INTO users (first_name, last_name, email, password, isadmin) VALUES (?, ?, ?, ?, ?)"; //using positional placeholders
+  $stmt = $db -> prepare($sql);
+  $stmt -> execute([$firstName, $lastName, $email, $password, $admin]);
+  $inserted = $stmt -> rowCount();
+  header('location: confirm.php?action=register&query='.$inserted);
+}
+
+
 //check which function when add button is submitted
 if (isset($_POST['btn_add'])) {
   switch ($addType) {
@@ -110,6 +138,9 @@ if (isset($_POST['btn_add'])) {
       break;
     case 'carousel':
       addCarousel();
+      break;
+    case 'user':
+      addUser();
       break;
   }
 }
@@ -125,7 +156,7 @@ if (isset($_POST['btn_add'])) {
   <link rel="stylesheet" href="../style/css/bootstrap.min.css"> <!-- bootstrap -->
   <link rel="stylesheet" href="../style/css/all.min.css"> <!-- fontaweson -->
   <link rel="stylesheet" href="../style/css/main.css"> <!-- my-style -->
-  <title>Add product page</title>
+  <title>Add Page</title>
 </head>
 <body>
   <div class="container-fluid">
@@ -133,94 +164,27 @@ if (isset($_POST['btn_add'])) {
     <div id="nav-section"></div> <!-- navbar section -->
 
     <section class="main-section">
-
       <div class="container">
 
-        <!-- add product form -->
-        <?php if($addType == 'product'): ?>
-
-        <h1>Add new product</h1>
-        <form action="" method="post" enctype="multipart/form-data">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="price">Price</label>
-            <input type="text" name="price" id="price" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="categories">Categories</label>
-            <select class="form-control" name="categories" id="categories">
-
-              <?php foreach($categories as $category): ?>
-                <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
-              <?php endforeach ?>
-
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="image">Select Image</label>
-            <input type="file" class="form-control-file" name="image" id="image">
-          </div>
-          <button class="btn btn-primary" name="btn_add">Add Product</button>
-        </form>
-        
-
-        <!-- add category form -->
-        <?php elseif ($addType == 'category'): ?>
-
-        <h1>Add new Category</h1>
-        <form action="" method="post">
-          <div class="form-group">
-            <label for="name">Category Name</label>
-            <input type="text" name="name" id="name" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10" class="form-control"></textarea>
-          </div>
-
-          <button class="btn btn-primary" name="btn_add">Add Category</button>
-        </form>
-
-        <!-- add carousel item form -->
-        <?php else: ?>
-
-        <h1>Add new carousel item</h1>
-        <form action="" method="post" enctype="multipart/form-data">
-          <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" name="title" id="title" class="form-control">
-          </div>
-          <div class="form-group">
-            <label for="caption">Caption</label>
-            <textarea name="caption" id="caption" cols="30" rows="10" class="form-control"></textarea>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="active" name="active" value="1" <?= getActive()? 'disabled' : '' ?>>
-            <label class="form-check-label" for="active">Active</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="visible" name="visible" value="2">
-            <label class="form-check-label" for="inlineCheckbox2">Visible</label>
-          </div>
-          <div class="form-group" style="margin-top: 10px;">
-            <label for="image">Select Image</label>
-            <input type="file" class="form-control-file" name="image" id="image">
-          </div>
-            <button class="btn btn-primary" name="btn_add">Add Item</button>
-          
-        </form>
-
-        <?php endif; ?>
+        <!-- Check for what type to add -->
+        <?php
+          switch ($addType) {
+            case 'product':
+              require_once 'forms/add_product.php';
+              break;
+            case 'category':
+              require_once 'forms/add_category.php';
+              break;
+            case 'carousel':
+              require_once 'forms/add_carousel.php';
+              break;
+            case 'user':
+              require_once 'forms/add_user.php';
+              break;
+          }
+        ?>
 
       </div>
-
     </section>
 
   </div> <!-- .container-fluid end -->

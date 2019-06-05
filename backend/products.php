@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+//check if user is logged in and if user is admin
+if(!isset($_SESSION['admin'])) {
+  header('location: login.php');
+}
+
 // include config file
 function dbConnect() {
   require 'config.php';
@@ -54,7 +61,6 @@ $categories = getCategories();
 
     <section class="main-section">
       <div class="container">
-
         <h1>Products Main Page</h1>
 
         <!-- select category to sort products -->

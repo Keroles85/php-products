@@ -19,9 +19,9 @@ function register() {
   $lastName = $_POST['last_name'];
   $email = $_POST['email'];
   $password = md5($_POST['password']);
-  $sql = "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)"; //using positional placeholders
+  $sql = "INSERT INTO users (first_name, last_name, email, password, isadmin) VALUES (?, ?, ?, ?, ?)"; //using positional placeholders
   $stmt = $db -> prepare($sql);
-  $stmt -> execute([$firstName, $lastName, $email, $password]);
+  $stmt -> execute([$firstName, $lastName, $email, $password, 0]);
   $inserted = $stmt -> rowCount();
   header('location: confirm.php?action=register&query='.$inserted);
 }
@@ -37,7 +37,7 @@ function login() {
   $queryOk = $stmt -> rowCount();
 
   if($queryOk > 0) {
-    $user = $stmt -> fetch(PDO::FETCH_ASSOC);//get user into associative array
+    $user = $stmt -> fetch();//get user into associative array
     $_SESSION['user'] = $user;
     header("location: confirm.php?action=Login&query=$queryOk");
   } else {

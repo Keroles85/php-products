@@ -1,0 +1,5 @@
+@mixin boxShadow($horz, $vert, $blur, $color) {
+  -webkit-box-shadow: $horz $vert $blur $color;
+  -moz-box-shadow: $horz $vert $blur $color;
+  box-shadow: $horz $vert $blur $color;
+}

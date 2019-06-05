@@ -39,6 +39,7 @@ function getFeatured() {
 
 <div class="wrapper">
 
+  <!-- header will be loaded throught jQuery -->
   <header class="nav_bar"></header>
 
   <section class="main-carousel">

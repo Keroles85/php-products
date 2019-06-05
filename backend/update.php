@@ -1,16 +1,13 @@
 <?php
+session_start();
+
+//check if user is logged in and if user is admin
+if(!isset($_SESSION['admin'])) {
+  header('location: login.php');
+}
 
 $type = $_GET['type'];
 $id = $_GET['id'];
-$name = $description = $price = $catID = $imgURL = '';
-
-//check for edit type (product, category)
-if ($type == 'product') {
-  getProduct($id); //get product for selected product id
-  $categories = getCategories(); //get all categories
-} else {
-  getCategory($id); //get category for selected category id
-}
 
 //check if edit will be made on product or category
 if (isset($_POST['btn_update'])) {
@@ -21,6 +18,12 @@ if (isset($_POST['btn_update'])) {
     case 'category':
       editCategory($id);
       break;
+    case 'carousel':
+      editCarousel($id);
+      break;
+    case 'user':
+      editUser($id);
+      break;
   }
 }
 
@@ -29,6 +32,7 @@ function dbConnect() {
   require 'config.php';
   return $db;
 }
+
 
 /**
 * UPDATE PRODUCT FUNCTIONS
@@ -68,11 +72,6 @@ function editProduct($id) {
   }
 }
 
-
-/** 
- * HANDLING IMAGE UPLOAD
-*/
-
 //update image table function
 function updateImg($id) {
   $db = dbConnect();
@@ -83,7 +82,11 @@ function updateImg($id) {
   return true; //incase the user only updated the image, need to set flag to 1
 }
 
-//upload new file to server function
+
+/** 
+ * HANDLING IMAGE UPLOAD
+*/
+
 function uploadFile($file) {
   //$extension = explode('.', $file['name']);
   $extension = strtolower(pathinfo($file['name'],PATHINFO_EXTENSION));
@@ -97,6 +100,7 @@ function uploadFile($file) {
 /** 
 * UPDATE CATEGORIES FUNCTIONS
  */
+
 function editCategory($id) {
   $db = dbConnect();
   $name = $_POST['name'];
@@ -123,6 +127,70 @@ function getCategories() {
   return $categories;
 }
 
+
+/** 
+ * UPDATE USER FUNCTION
+*/
+
+function getUser($id) {
+  $db = dbConnect();
+  $user = $db -> query("SELECT * FROM users WHERE id=$id");
+  unset($db);
+  return $user;
+}
+
+function editUser($id) {
+  $db = dbConnect();
+  $firstName = $_POST['first_name'];
+  $lastName = $_POST['last_name'];
+  $email = $_POST['email'];
+  $admin = isset($_POST['admin'])? 1 : 0;
+  $sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, isadmin = ? WHERE id=$id"; //using positional placeholders
+  $stmt = $db -> prepare($sql);
+  $stmt -> execute([$firstName, $lastName, $email, $admin]);
+  $inserted = $stmt -> rowCount();
+  header('location: confirm.php?action=update&query='.$inserted);
+}
+
+
+/** 
+ * UPDATE CAROUSEL ITEMS
+*/
+
+function getCarousel($id) {
+  $db = dbConnect();
+  $sql = "select * from carousel where id=$id";
+  $stmt = $db -> query($sql);
+  $items = $stmt -> fetchAll();
+  unset($db);
+  return $items;
+}
+
+function editCarousel($id) {
+  $db = dbConnect();
+  $title = $_POST['title'];
+  $caption = $_POST['caption'];
+  $active = isset($_POST['active'])? 1 : 0;
+  $visible = isset($_POST['visible'])? 1 : 0;
+  
+  if (!is_uploaded_file($_FILES['image']['tmp_name'])) {
+    $sql = "UPDATE carousel SET title=?, caption=?, active = ?, visible = ? WHERE id=$id";
+    $stmt = $db -> prepare($sql);
+    $stmt -> execute([$title, $caption, $active, $visible]);
+    $updated = $stmt -> rowCount();
+    unset($db);
+    header('location: confirm.php?action=update&query='.$updated);
+  } else {
+    $imgURL = uploadFile($_FILES['image']);
+    $sql = "UPDATE carousel SET title=?, caption=?, img_url = ?, active = ?, visible = ? WHERE id=$id";
+    $stmt = $db -> prepare($sql);
+    $stmt -> execute([$title, $caption,$imgURL, $active, $visible]);
+    $updated = $stmt -> rowCount();
+    unset($db);
+    header('location: confirm.php?action=update&query='.$updated);
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -131,81 +199,35 @@ function getCategories() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Add product page</title>
   <link rel="stylesheet" href="../style/css/bootstrap.min.css"> <!-- bootstrap -->
   <link rel="stylesheet" href="../style/css/all.min.css"> <!-- fontaweson -->
   <link rel="stylesheet" href="../style/css/main.css"> <!-- my-style -->
+  <title>Update Page</title>
 </head>
 <body>
   <div class="container-fluid">
     <div id="nav-section"></div>
-
     <section class="main-section">
       <div class="container">
-
-        <h1>Edit <?php echo $type ?></h1>
-        
-        <!-- update product form -->
-        <?php if ($type == 'product'): ?>
+  
+        <!-- Check type to update -->
         <?php 
-          $products = getProduct($id);
-          foreach($products as $product):
+          switch ($type) {
+            case 'product':
+              require_once 'forms/update_product.php';
+              break;
+            case 'category':
+              require_once 'forms/update_category.php';
+              break;
+            case 'carousel':
+              require_once 'forms/update_carousel.php';
+              break;
+            case 'user':
+              require_once 'forms/update_user.php';
+              break;
+          }
         ?>
-        <form action="" method="post" enctype="multipart/form-data">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" value="<?= $product['name'] ?>">
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10" class="form-control" ><?= $product['description'] ?></textarea>
-          </div>
-          <div class="form-group">
-            <label for="price">Price</label>
-            <input type="text" name="price" id="price" class="form-control" value="<?= $product['price'] ?>">
-          </div>
-          <div class="form-group">
-            <label for="categories">Categories</label>
-            <select class="form-control" name="categories" id="categories">
 
-              <?php foreach($categories as $category): ?>
-                <option value="<?= $category['id'] ?>" <?= ($category['id'] == $product['cat_id'])? 'selected' : '' ?>>
-                  <?= $category['name'] ?>
-                </option>
-              <?php endforeach; ?>
-
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Select new photo (optional)</label>
-            <input type="file" class="form-control-file" name="image" id="image">
-            <div style="padding-top: 10px;"><img src="../<?= $product['image_url'] ?>" class="img-thumbnail" alt=""></div>
-          </div>
-          <button class="btn btn-primary" name="btn_update">Update</button>
-        </form>
-        <?php endforeach; ?>
-        
-        <!-- update category form -->
-        <?php else: ?>
-        <?php 
-          $categories = getCategory($id);
-          foreach($categories as $category):
-        ?>
-        <form action="" method="post">
-          <div class="form-group">
-            <label for="name">Category Name</label>
-            <input type="text" name="name" id="name" class="form-control" value="<?= $category['name'] ?>">
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10" class="form-control"><?= $category['description'] ?></textarea>
-          </div>
-
-          <button class="btn btn-primary" name="btn_update">Update</button>
-        </form>
-
-        <?php endforeach; ?>
-        <?php endif; ?>
       </div>
     </section>
   </div>

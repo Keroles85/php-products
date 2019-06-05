@@ -1,8 +1,4 @@
-@mixin boxShadow($horz, $vert, $blur, $color) {
-  -webkit-box-shadow: $horz $vert $blur $color;
-  -moz-box-shadow: $horz $vert $blur $color;
-  box-shadow: $horz $vert $blur $color;
-}
+@import '_boxshadow';
 
 .wrapper {
   max-width: 1140px;
