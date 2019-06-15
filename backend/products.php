@@ -1,45 +1,24 @@
 <?php
-session_start();
-
-//check if user is logged in and if user is admin
-if(!isset($_SESSION['admin'])) {
-  header('location: login.php');
-}
-
-// include config file
-function dbConnect() {
-  require 'config.php';
-  return $db;
-}
+include_once dirname(__DIR__) . '/includes/admin-session.php';
+include_once dirname(__DIR__) . '/includes/autoload.php';
 
 if (isset($_GET['cat'])) $catID = $_GET['cat'];
 
-function getProducts($catID) {
-  $db = dbConnect();
+function getProducts($product,$catID) {
   if (!isset($catID) || $catID == 'all') {
-    $products = $db -> query("SELECT prds.id, prds.name AS product_name, prds.description, prds.price, 
-    cat.id AS cat_id, cat.name AS cat_name, img.image_url FROM 
-    products AS prds INNER JOIN categories AS cat ON prds.cat_id = cat.id
-    INNER JOIN images AS img ON prds.id = img.product_id ORDER BY cat_id, prds.id");
+    $products = $product->readAll();
   } else {
-    $products = $db -> query("SELECT prds.id, prds.name AS product_name, prds.description, prds.price, 
-    cat.id AS cat_id, cat.name AS cat_name, img.image_url FROM 
-    products AS prds INNER JOIN categories AS cat ON prds.cat_id = cat.id
-    INNER JOIN images AS img ON prds.id = img.product_id WHERE cat_id = $catID");
+    $products = $product->readAllByCategory($catID);
   }
-  
   return $products;
 }
 
-function getCategories() {
-  $db = dbConnect();
-  $categories = $db -> query ('SELECT * FROM categories');
-  unset($db);//close connection
-  return $categories;
+function getCategories($category) {
+  return $category->readAll();
 }
 
-$products = getProducts($catID);
-$categories = getCategories();
+$products = getProducts(new Product(), $catID);
+$categories = getCategories(new Category());
 
 ?>
 
@@ -125,7 +104,7 @@ $categories = getCategories();
   <script>
     $(document).ready(function() {
       $('#categories').change(function() {
-        window.location.href = "http://localhost/Assignment/php-products/backend/products.php?cat=" + $('#categories').val();
+        window.location.href = "http://localhost/Assignment/php-products-oop/backend/products.php?cat=" + $('#categories').val();
       });
     });
   </script>

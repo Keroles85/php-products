@@ -1,39 +1,16 @@
 <?php
 session_start();
+include_once dirname(__DIR__) . '/includes/autoload.php';
 
-if(isset($_POST['login_btn'])) {
-  login();
+if (isset($_POST['login_btn'])) {
+  login(new User());
 }
 
-// include config file
-function dbConnect() {
-  require 'config.php';
-  return $db;
-}
-
-function login() {
-  $db = dbConnect();
+function login($user) {
   $email = $_POST['email'];
   $password = md5($_POST['password']);
 
-  $sql = "SELECT * FROM users WHERE email = :email AND password = :password"; //using named placeholders
-  $stmt = $db -> prepare($sql);
-  $stmt -> execute(['email' => $email, 'password' => $password]);
-  $queryOk = $stmt -> rowCount();
-
-  //check if query returned any result
-  if($queryOk > 0) {
-    $user = $stmt -> fetch(PDO::FETCH_ASSOC);//get user into associative array
-    //check if user is admin
-    if($user['isadmin']) {
-      $_SESSION['admin'] = $user;
-      header("location: index.php");
-    } else {
-      echo "You are not authorised to enter this page";
-    }
-  } else {
-    echo "Username / Password incorrect";
-  }
+  $user->login($email, $password);
 }
 
 ?>
@@ -59,12 +36,26 @@ function login() {
         <form action="" method="post">
           <div class="form-group">
             <label for="email">Email address</label>
-            <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp">
-            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+
+            <?php if (!isset($_GET['status'])): ?>
+              <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+            <?php else: ?>
+              <input type="text" class="form-control is-invalid" id="email" name="email" aria-describedby="emailHelp" value="<?= $_GET['email'] ?>">
+            <?php endif; ?>
+
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password">
+
+            <?php if (!isset($_GET['status'])): ?>
+              <input type="password" class="form-control" id="password" name="password">
+            <?php else: ?>
+              <input type="password" class="form-control is-invalid" id="password" name="password">
+              <div class="invalid-feedback">
+                Please Check email/password is correct
+              </div>
+            <?php endif; ?>
+
           </div>
           <button type="submit" name="login_btn" class="btn btn-primary">Log In</button>
         </form>

@@ -1,9 +1,11 @@
 <h1>Update Product</h1>
 
 <form action="" method="post" enctype="multipart/form-data">
-  <?php 
-    $categories = getCategories();
-    $products = getProduct($id);
+  <?php
+    $category = new Category();
+    $product = new Product();
+    $categories = $category->readAll();
+    $products = $product->readByID($id);
     foreach($products as $product):
   ?>
     <div class="form-group">
@@ -22,9 +24,9 @@
       <label for="categories">Categories</label>
       <select class="form-control" name="categories" id="categories">
 
-        <?php foreach($categories as $category): ?>
-          <option value="<?= $category['id'] ?>" <?= ($category['id'] == $product['cat_id'])? 'selected' : '' ?>>
-            <?= $category['name'] ?>
+        <?php foreach($categories as $cols): ?>
+          <option value="<?= $cols['id'] ?>" <?= ($cols['id'] == $product['cat_id'])? 'selected' : '' ?>>
+            <?= $cols['name'] ?>
           </option>
         <?php endforeach; ?>
 

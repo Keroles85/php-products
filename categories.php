@@ -1,15 +1,9 @@
 <?php
 
-function dbConnect() {
-  require 'backend/config.php';
-  return $db;
-}
+include_once __DIR__ . '/includes/autoload.php';
 
-function getCategories() {
-  $db = dbConnect();
-  $sql = 'SELECT * FROM categories';
-  $categories = $db -> query($sql);
-  return $categories;
+function getCategories($category) {
+  return $category->readAll();
 }
 
 ?>
@@ -35,7 +29,7 @@ function getCategories() {
 
     <!-- get categories items -->
     <?php 
-    $categories = getCategories();
+    $categories = getCategories(new Category());
     foreach($categories as $category): 
     ?>
     <a href="products.php?cat_id=<?= $category['id'] ?>">

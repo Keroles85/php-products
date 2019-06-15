@@ -1,26 +1,10 @@
 <?php
-session_start();
+include_once dirname(__DIR__) . '/includes/admin-session.php';
+include_once dirname(__DIR__) . '/includes/autoload.php';
 
-//check if user is logged in and if user is admin
-if(!isset($_SESSION['admin'])) {
-  header('location: login.php');
-}
-
-// include config file
-function dbConnect() {
-  require 'config.php';
-  return $db;
-}
- 
-//get categories function to show in dropdown menu
-function getCategories() {
-  $db = dbConnect();
-  $categories = $db->query("SELECT * FROM categories");
-  unset($db);
-  return $categories;
-}
-
-$categories = getCategories();
+//get all categories
+$category = new Category();
+$categories = $category->readAll();
 
 ?>
 

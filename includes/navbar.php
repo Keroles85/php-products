@@ -1,9 +1,28 @@
 <?php
 session_start();
 ?>
+
+<style>
+  .dropdown {
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+  }
+
+  .dropdown-toggle {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .user{
+    margin: 0 0.5rem;
+    text-decoration: underline;
+  }
+</style>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
-    <a class="navbar-brand" href="http://localhost/Assignment/php-products/" title="Furniture Home">
+    <a class="navbar-brand" href="http://localhost/Assignment/php-products-oop/" title="Furniture Home">
       <i class="fas fa-chair fa-2x"></i></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -25,9 +44,13 @@ session_start();
       </ul>
 
       <div class="dropdown">
-        <button class="btn dropdown-toggle" id="userMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-user"></i>
-        </button>
+        <div class="dropdown-toggle" id="userMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <?php if (isset($_SESSION['user'])): ?>
+            <i class="fas fa-user"></i> <span class="user"><?= $_SESSION['user']['first_name'] ?></span>
+          <?php else: ?>
+            <i class="fas fa-user"></i>
+          <?php endif; ?>
+        </div>
 
         <!-- check if user logged in -->
         <?php if (!isset($_SESSION['user'])): ?>

@@ -2,7 +2,7 @@
 
 <form action="" method="post">
   <?php
-    $user = getUser($id);
+    $user = getUser(new User(), $id);
     foreach($user as $cols):
   ?>
     <div class="row" style="margin-bottom: 1rem">

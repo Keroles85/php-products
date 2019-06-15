@@ -1,22 +1,24 @@
 <?php
-session_start();
-
-//check if user is logged in and if user is admin
-if(!isset($_SESSION['admin'])) {
-  header('location: login.php');
-}
+include_once dirname(__DIR__) . '/includes/admin-session.php';
+include_once dirname(__DIR__) . '/includes/autoload.php';
 
 $type = $_GET['type'];
-$id = $_GET['id'];
+$id = isset($_GET['id']) ? $_GET['id'] : die("ERROR: missing ID.");
 
 //check if edit will be made on product or category
 if (isset($_POST['btn_update'])) {
   switch ($type) {
     case 'product':
-      editProduct($id);
+      editProduct(new Product(), $id);
       break;
     case 'category':
-      editCategory($id);
+      editCategory(new Category(), $id);
+      break;
+    case 'carousel':
+      editCarousel(new Carousel(), $id);
+      break;
+    case 'user':
+      editUser(new User(), $id);
       break;
     case 'carousel':
       editCarousel($id);
@@ -27,167 +29,92 @@ if (isset($_POST['btn_update'])) {
   }
 }
 
-// include config file
-function dbConnect() {
-  require 'config.php';
-  return $db;
-}
 
-
-/**
-* UPDATE PRODUCT FUNCTIONS
+/*
+ * UPDATE PRODUCT FUNCTIONS
  */
-
-//get product by id to display in form function
-function getProduct($id) {
-  $db = dbConnect();
-  $products = $db -> query("SELECT img.image_url, pdt.*  
-    FROM images AS img INNER JOIN products AS pdt ON img.product_id = pdt.id 
-    WHERE pdt.id=$id");
-  unset($db);
-  return $products;
-}
-
-function editProduct($id) {
-  //set variables for sql update
-  $db = dbConnect();
-  $name = $_POST['name'];
-  $description = $_POST['description'];
-  $price = $_POST['price'];
-  $catID = $_POST['categories'];
+function editProduct($product, $id) {
+  $data = [
+    'name' => $_POST['name'],
+    'price' => $_POST['price'],
+    'description' => $_POST['description'],
+    'cat_id' => $_POST['categories']
+  ];
 
   //check if user is updating photo
   if (!is_uploaded_file($_FILES['image']['tmp_name'])) {
-    $sql = "UPDATE products SET name = '$name', price = $price, description = '$description', cat_id = $catID WHERE id = $id";
-    $stmt = $db -> exec($sql);
-    unset($db);//close connection
+    $stmt = $product->update($id, $data);
     header('location: confirm.php?action=Product&type=update&query='.$stmt);
+
   //if user is updating the photo
   } else {
-    $queryOk = 0;
-    $sql = "UPDATE products SET name = '$name', price = $price, description = '$description', cat_id = $catID WHERE id = $id";
-    $queryOk = $db -> exec($sql);
-    $queryOk = updateImg($id)? 1 : 0;
-    header('location: confirm.php?action=Product&type=update&query='.$queryOk);
+    $img = $_FILES['image'];
+    $stmt = $product->update($id, $data, $img);
+    header('location: confirm.php?action=Product&type=update&query='.$stmt);
   }
 }
 
-//update image table function
-function updateImg($id) {
-  $db = dbConnect();
-  $imgURL = uploadFile($_FILES['image']);
-  $update_img_sql = "UPDATE images SET image_url = '$imgURL' WHERE product_id = $id";
-  $db -> exec($update_img_sql);
-  unset($db);
-  return true; //incase the user only updated the image, need to set flag to 1
-}
 
-
-/** 
- * HANDLING IMAGE UPLOAD
-*/
-
-function uploadFile($file) {
-  //$extension = explode('.', $file['name']);
-  $extension = strtolower(pathinfo($file['name'],PATHINFO_EXTENSION));
-  $imgURL = "../upload/" . time() . ".{$extension}";
-  $tmpLocation = $file['tmp_name'];
-  move_uploaded_file($tmpLocation, $imgURL);
-  return $imgURL;
-}
-
-
-/** 
-* UPDATE CATEGORIES FUNCTIONS
+/*
+ * UPDATE CATEGORIES FUNCTIONS
  */
+function editCategory($category, $id) {
+  $data = [
+    'name' => $_POST['name'],
+    'description' => $_POST['description']
+  ];
 
-function editCategory($id) {
-  $db = dbConnect();
-  $name = $_POST['name'];
-  $description = $_POST['description'];
-  $sql = "UPDATE categories SET name = '$name', description = '$description' WHERE id = $id";
-  $stmt = $db -> exec($sql);
-  unset($db);
+  $stmt = $category->update($id, $data);
   header('location: confirm.php?action=Category&type=update&query='.$stmt);
-} 
-
-//get category by id to display in form function
-function getCategory($id) {
-  $db = dbConnect();
-  $categories = $db -> query("SELECT * FROM categories WHERE id = $id");
-  unset($db);
-  return $categories;
-}
-
-//get all categories when editing product
-function getCategories() {
-  $db = dbConnect();
-  $categories = $db->query("SELECT * FROM categories");
-  unset($db);
-  return $categories;
 }
 
 
-/** 
+/*
  * UPDATE USER FUNCTION
-*/
-
-function getUser($id) {
-  $db = dbConnect();
-  $user = $db -> query("SELECT * FROM users WHERE id=$id");
-  unset($db);
-  return $user;
-}
-
-function editUser($id) {
-  $db = dbConnect();
-  $firstName = $_POST['first_name'];
-  $lastName = $_POST['last_name'];
-  $email = $_POST['email'];
-  $admin = isset($_POST['admin'])? 1 : 0;
-  $sql = "UPDATE users SET first_name = ?, last_name = ?, email = ?, isadmin = ? WHERE id=$id"; //using positional placeholders
-  $stmt = $db -> prepare($sql);
-  $stmt -> execute([$firstName, $lastName, $email, $admin]);
-  $inserted = $stmt -> rowCount();
-  header('location: confirm.php?action=update&query='.$inserted);
+ */
+function getUser($user, $id) {
+  return $user->readByID($id);
 }
 
 
-/** 
+function editUser($user, $id) {
+  $data = [
+    'first_name' => $_POST['first_name'],
+    'last_name' => $_POST['last_name'],
+    'email' => $_POST['email'],
+    'isadmin' => isset($_POST['admin'])? 1 : 0
+  ];
+
+  $stmt = $user->update($id, $data);
+  header('location: confirm.php?action=update&query='.$stmt);
+}
+
+
+/*
  * UPDATE CAROUSEL ITEMS
-*/
-
-function getCarousel($id) {
-  $db = dbConnect();
-  $sql = "select * from carousel where id=$id";
-  $stmt = $db -> query($sql);
-  $items = $stmt -> fetchAll();
-  unset($db);
-  return $items;
-}
-
-function editCarousel($id) {
-  $db = dbConnect();
-  $title = $_POST['title'];
-  $caption = $_POST['caption'];
-  $active = isset($_POST['active'])? 1 : 0;
-  $visible = isset($_POST['visible'])? 1 : 0;
+ */
+function editCarousel($carousel, $id) {
+  $data = [
+    'title' => $_POST['title'],
+    'caption' => $_POST['caption'],
+    'active' => isset($_POST['active'])? 1 : 0,
+    'visible' => isset($_POST['visible'])? 1 : 0
+  ];
   
   if (!is_uploaded_file($_FILES['image']['tmp_name'])) {
-    $sql = "UPDATE carousel SET title=?, caption=?, active = ?, visible = ? WHERE id=$id";
-    $stmt = $db -> prepare($sql);
-    $stmt -> execute([$title, $caption, $active, $visible]);
-    $updated = $stmt -> rowCount();
-    unset($db);
-    header('location: confirm.php?action=update&query='.$updated);
+    $stmt = $carousel->update($id, $data);
+    header('location: confirm.php?action=update&query='.$stmt);
   } else {
-    $imgURL = uploadFile($_FILES['image']);
-    $sql = "UPDATE carousel SET title=?, caption=?, img_url = ?, active = ?, visible = ? WHERE id=$id";
-    $stmt = $db -> prepare($sql);
-    $stmt -> execute([$title, $caption,$imgURL, $active, $visible]);
-    $updated = $stmt -> rowCount();
-    unset($db);
-    header('location: confirm.php?action=update&query='.$updated);
+
+    //upload the image and get url
+    $image = new Image();
+    $img_url = $image->uploadFile($_FILES['image']);
+
+    //add the image url to data array
+    $data['img_url'] = $img_url;
+
+    $stmt = $carousel->update($id, $data);
+    header('location: confirm.php?action=update&query='.$stmt);
   }
 }
 
@@ -206,6 +133,8 @@ function editCarousel($id) {
 </head>
 <body>
   <div class="container-fluid">
+
+    <!-- navigation section -->
     <div id="nav-section"></div>
     <section class="main-section">
       <div class="container">

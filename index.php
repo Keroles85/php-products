@@ -1,29 +1,19 @@
 <?php
+include_once __DIR__ . '/includes/autoload.php';
 
-function dbConnect() {
-  require 'backend/config.php';
-  return $db;
+/*$file = __DIR__;// . "/classes/Product.php";
+echo $file;*/
+
+function getCarousel($carousel) {
+  return $carousel->readVisible();
 }
 
-function carousel() {
-  $db = dbConnect();
-  $sql = 'SELECT * FROM carousel WHERE visible <> 0 ORDER BY active DESC';
-  $items = $db -> query($sql);
-  unset($db);
-  return $items;
-}
-
-function getFeatured() {
-  $db = dbConnect();
-  $sql = 'SELECT prds.id, prds.name, prds.description, imgs.image_url 
-    FROM products AS prds INNER JOIN images AS imgs ON imgs.product_id = prds.id
-    WHERE featured = 1';
-  $featured = $db -> query($sql);
-  unset($db);
-  return $featured;
+function getFeatured($product) {
+  return $product->getFeatured();
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +40,7 @@ function getFeatured() {
         <!-- php loop for slide buttons -->
         <?php
           $count = 0; 
-          $items = carousel();
+          $items = getCarousel(new Carousel());
           foreach($items as $item): 
         ?>
 
@@ -66,7 +56,7 @@ function getFeatured() {
 
       <!-- php loop for slide images -->
       <?php 
-        $images = carousel();
+        $images = getCarousel(new Carousel());
         foreach($images as $image): 
       ?>
         <div class="carousel-item <?= $image['active']? 'active' : '' ?>">
@@ -98,7 +88,7 @@ function getFeatured() {
 
       <!-- show featured items from database -->
       <?php
-        $featured = getFeatured();
+        $featured = getFeatured(new Product());
         foreach($featured as $feat):
       ?>
       <div class="card" style="width: 21rem;">

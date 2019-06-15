@@ -1,18 +1,11 @@
 <?php
 
+include_once __DIR__ . '/includes/autoload.php';
+
 $product_id = $_GET['id'];
 
-function dbConnect() {
-  require 'backend/config.php';
-  return $db;
-}
-
-function getProduct($product_id) {
-  $db = dbConnect();
-  $sql = "SELECT products.*, images.image_url FROM products INNER JOIN images
-    ON images.product_id = products.id WHERE products.id = $product_id";
-  $product = $db -> query($sql);
-  return $product;
+function getProduct($product, $product_id) {
+  return $product->readByID($product_id);
 }
 
 ?>
@@ -37,7 +30,7 @@ function getProduct($product_id) {
   <div class="card">
 
     <?php 
-    $product = getProduct($product_id);
+    $product = getProduct(new Product(), $product_id);
     foreach($product as $details): 
     ?>
     <img src="<?= $details['image_url'] ?>" class="card-img-top" alt="Product Image">

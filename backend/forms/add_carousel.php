@@ -10,7 +10,7 @@
     <textarea name="caption" id="caption" cols="30" rows="10" class="form-control"></textarea>
   </div>
   <div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="active" name="active" value="1" <?= getActive()? 'disabled' : '' ?>>
+    <input class="form-check-input" type="checkbox" id="active" name="active" value="1" <?= getActive(new Carousel())? 'disabled' : '' ?>>
     <label class="form-check-label" for="active">Active</label>
   </div>
   <div class="form-check form-check-inline">

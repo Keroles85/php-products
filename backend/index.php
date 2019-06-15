@@ -1,16 +1,11 @@
 <?php
 
-session_start();
+include_once dirname(__DIR__) . '/includes/admin-session.php';
+include_once dirname(__DIR__) . '/includes/autoload.php';
 
-// include config file
-function dbConnect(){
+function dbConnect() {
   require 'config.php';
   return $db;
-}
-
-//check if user is logged in and if user is admin
-if (!isset($_SESSION['admin'])) {
-  header('location: login.php');
 }
 
 //get latest added product
@@ -58,7 +53,7 @@ function getInventory() {
     <section class="main-section">
 
     <!-- LATEST ADDED PRODUCT -->
-    <div class="card" style="margin: 2rem 0">
+    <div class="card shadow-sm" style="margin: 2rem 0">
       <h5 class="card-header">
         Latest added item
       </h5>
@@ -91,7 +86,7 @@ function getInventory() {
 
       <div class="col-4">
         <!-- INVENTORY CARD -->
-        <div class="card">
+        <div class="card shadow-sm">
           <h5 class="card-header">Inventory</h5>
           <div class="card-body">
             <table class="table table-borderless">
@@ -118,7 +113,7 @@ function getInventory() {
       </div>
 
       <div class="col-4">
-        <div class="card">
+        <div class="card shadow-sm">
           <div class="card-body">
             <h5 class="card-title">Latest Members</h5>
             <p class="card-text">select member first_name + last_name, isadmin</p>
@@ -128,7 +123,7 @@ function getInventory() {
       </div>
 
       <div class="col-4">
-        <div class="card">
+        <div class="card shadow-sm">
           <div class="card-body">
             <h5 class="card-title">Latest orders</h5>
             <p class="card-text">select latest orders after creating shopping cart</p>

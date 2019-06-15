@@ -1,48 +1,33 @@
 <?php
 session_start();
 
-function dbConnect() {
-  require 'backend/config.php';
-  return $db;
-}
+include_once __DIR__ . '/includes/autoload.php';
 
-// check if user is registerting or loggin in
+// check if user is registering or logging in
 if (isset($_POST['register_btn'])) {
-  register();
+  register(new User());
 } elseif (isset($_POST['login_btn'])) {
-  login();
+  login(new User());
 }
 
-function register() {
-  $db = dbConnect();
-  $firstName = $_POST['first_name'];
-  $lastName = $_POST['last_name'];
-  $email = $_POST['email'];
-  $password = md5($_POST['password']);
-  $sql = "INSERT INTO users (first_name, last_name, email, password, isadmin) VALUES (?, ?, ?, ?, ?)"; //using positional placeholders
-  $stmt = $db -> prepare($sql);
-  $stmt -> execute([$firstName, $lastName, $email, $password, 0]);
-  $inserted = $stmt -> rowCount();
-  header('location: confirm.php?action=register&query='.$inserted);
+function register($user) {
+  $data = [
+    'first_name' => $_POST['first_name'],
+    'last_name' => $_POST['last_name'],
+    'email' => $_POST['email'],
+    'password' => md5($_POST['password']),
+    'isadmin' => 0
+  ];
+
+  $stmt = $user->create($data);
+  header('location: confirm.php?action=register&query='.$stmt);
 }
 
-function login() {
-  $db = dbConnect();
+function login($user) {
   $email = $_POST['email'];
   $password = md5($_POST['password']);
 
-  $sql = "SELECT * FROM users WHERE email = :email AND password = :password"; //using named placeholders
-  $stmt = $db -> prepare($sql);
-  $stmt -> execute(['email' => $email, 'password' => $password]);
-  $queryOk = $stmt -> rowCount();
-
-  if($queryOk > 0) {
-    $user = $stmt -> fetch();//get user into associative array
-    $_SESSION['user'] = $user;
-    header("location: confirm.php?action=Login&query=$queryOk");
-  } else {
-    echo "Username / Password incorrect";
-  }
+  $user->login($email, $password);
 }
 
 ?>

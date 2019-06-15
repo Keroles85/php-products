@@ -1,25 +1,9 @@
 <?php
-session_start();
+include_once dirname(__DIR__) . '/includes/admin-session.php';
+include_once dirname(__DIR__) . '/includes/autoload.php';
 
-//check if user is logged in and if user is admin
-if(!isset($_SESSION['admin'])) {
-  header('location: login.php');
-}
-
-session_start();
-// include config file
-function dbConnect() {
-  require 'config.php';
-  return $db;
-}
-
-function getUsers() {
-  $db  = dbConnect();
-  $sql = 'select * from users';
-  $stmt = $db -> query($sql);
-  $users = $stmt -> fetchAll();
-  unset($db);
-  return $users;
+function getUsers($user) {
+  return $user->readAll();
 }
 
 ?>
@@ -56,7 +40,7 @@ function getUsers() {
         <tbody>
 
           <?php
-            $users = getUsers();
+            $users = getUsers(new User());
             foreach($users as $user): ?>
           <tr>
             <th scope="row"><?= $user['id'] ?></th>

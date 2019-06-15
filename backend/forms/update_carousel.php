@@ -1,8 +1,9 @@
 <h1>Update Carousel</h1>
 
 <form action="" method="post" enctype="multipart/form-data">
-  <?php 
-    $items = getCarousel($id);
+  <?php
+    $carousel = new Carousel();
+    $items = $carousel->readByID($id);
     foreach($items as $item):
   ?>
     <div class="form-group">
@@ -19,7 +20,7 @@
       <div style="padding-top: 10px;"><img src="../<?= $item['img_url'] ?>" class="img-thumbnail" alt=""></div>
     </div>
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" name="active" value="1" id="active" <?= $item['active']? 'checked': '' ?>>
+      <input class="form-check-input" type="checkbox" name="active" value="1" id="active" <?= $item['active']? 'checked': '' ?> <?= ($carousel->getActive() && !$carousel->getActiveByID($id))? 'disabled' : '' ?>>
       <label class="form-check-label" for="active">
         Active
       </label>

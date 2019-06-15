@@ -1,26 +1,17 @@
 <?php
 
-function dbConnect() {
-  require 'backend/config.php';
-  return $db;
+include_once __DIR__ . '/includes/autoload.php';
+
+$cat_id = isset($_GET['cat_id'])? $_GET['cat_id'] : die("ERROR: missing ID.") ;
+
+function getProducts($product, $cat_id) {
+  return $product->readAllByCategory($cat_id);
 }
 
-$cat_id = $_GET['cat_id'];
-
-function getProducts($cat_id) {
-  $db = dbConnect();
-  $sql = "SELECT products.*, images.image_url FROM products INNER JOIN images
-    ON images.product_id = products.id WHERE products.cat_id = $cat_id";
-  $products = $db -> query($sql);
-  return $products;
-}
-
-function getCategoryName($cat_id) {
-  $db = dbConnect();
-  $sql = "SELECT name FROM categories WHERE id = $cat_id";
-  $name = $db -> query($sql);
-  unset($db);
-  return $name -> fetchAll();
+function getCategoryName($category, $cat_id) {
+  foreach ($category->readCategory($cat_id) as $cols) {
+    return $cols['name'];
+  };
 }
 
 ?>
@@ -44,14 +35,13 @@ function getCategoryName($cat_id) {
   <section class="main-section">
     <h1>
       <?php
-        $categoy = getCategoryName($cat_id); 
-        echo $category['name']; 
+        echo getCategoryName(new Category(), $cat_id);
       ?>
     </h1>
 
     <!-- show all products -->
     <?php
-    $products = getProducts($cat_id); 
+    $products = getProducts(new Product() ,$cat_id);
     foreach($products as $product): 
     ?>
     <a href="product.php?id=<?= $product['id'] ?>">

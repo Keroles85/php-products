@@ -1,36 +1,14 @@
 <?php
-session_start();
-
-//check if user is logged in and if user is admin
-if(!isset($_SESSION['admin'])) {
-  header('location: login.php');
-}
-
-function dbConnect() {
-  require 'config.php';
-  return $db;
-}
+include_once dirname(__DIR__) . '/includes/admin-session.php';
+include_once dirname(__DIR__) . '/includes/autoload.php';
 
 //get all carousel items
-function getCarousel() {
-  $db = dbConnect();
-  $sql = 'SELECT * FROM carousel';
-  $items = $db -> query($sql);
-  unset($db);
-  return $items;
+function getCarousel($carousel) {
+  return $carousel->readAll();
 }
 
-function checkActive() {
-  $db = dbConnect();
-  $sql = 'SELECT * FROM carousel WHERE active=1';
-  $stmt = $db -> query($sql);
-  $active = $stmt -> rowCount();
-  return $active;
-}
-
-//update carousel status (visibilty, active)
-function updateStatus() {
-  
+function checkActive($carousel) {
+  return $carousel->getActive();
 }
 
 ?>
@@ -49,7 +27,7 @@ function updateStatus() {
 </head>
 <body>
   <!-- Check for active items -->
-  <?php if(!checkActive()):  ?>
+  <?php if(!checkActive(new Carousel())):  ?>
     <script>
      window.addEventListener('load', function() {
         alert("There's no active items, must choose active item");
@@ -81,7 +59,7 @@ function updateStatus() {
           <tbody>
 
           <?php 
-            $items = getCarousel();
+            $items = getCarousel(new Carousel());
             foreach($items as $item): 
           ?>
 
