@@ -3,11 +3,12 @@
 .wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr auto auto;
+  grid-auto-rows: auto;
   grid-template-areas: 
     "nav nav nav"
     "crsl crsl crsl"
-    "feat feat feat";
+    "feat feat feat"
+    "fdbck fdbck adv";
   grid-gap: 1rem;
   max-width: 1140px;
   //min-height: 100vh;
@@ -30,7 +31,6 @@
     .items {
       display: flex;
       justify-content: space-between;
-      margin: 25px 0;
 
       .card {
         border-radius: 0!important;
@@ -47,6 +47,34 @@
     }
   }
 
+  .feedback {
+    grid-area: fdbck;
+
+    .jumbotron {
+      background-color: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 2rem!important;
+    }
+
+    #feedback-success {
+      text-align: center;
+      background-color: #34ce57;
+      color: #f8f8f8;
+      padding: 7.5rem 1rem;
+      display: none;
+
+      h1 {
+        font-weight: 800;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  .advert {
+    align-self: center;
+  }
+
 }
 
 @media screen and (max-width: 768px) {
@@ -57,5 +85,9 @@
     .card {
       margin-bottom: 1rem;
     }
+  }
+
+  .feedback {
+    padding: 1rem;
   }
 }

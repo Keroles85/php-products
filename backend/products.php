@@ -102,10 +102,8 @@ $categories = getCategories(new Category());
 
 
   <script>
-    $(document).ready(function() {
-      $('#categories').change(function() {
-        window.location.href = "http://localhost/Assignment/php-products-oop/backend/products.php?cat=" + $('#categories').val();
-      });
+    $('#categories').change(function() {
+
     });
   </script>
 </body>

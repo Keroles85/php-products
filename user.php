@@ -26,8 +26,8 @@ function register($user) {
 function login($user) {
   $email = $_POST['email'];
   $password = md5($_POST['password']);
-
-  $user->login($email, $password);
+  $cookie = isset($_POST[''])? 1 : 0;
+  $user->login($email, $password, $cookie);
 }
 
 ?>
@@ -48,18 +48,7 @@ function login($user) {
 <div class="wrapper">
 
   <header class="nav_bar"></header>
-
-  <section class="main-content">
-    <?php if(count($errors) > 0): ?>
-    <div class="alert alert-danger errors">
-      <ul>
-        <?php foreach($errors as $error): ?>
-        <li><?= $error ?></li>
-        <?php endforeach; ?>
-      </ul>
-    </div>
-    <?php endif; ?>
-  </section>
+  <section class="main-content"></section>
 
 </div>
 

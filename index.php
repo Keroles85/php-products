@@ -79,7 +79,7 @@ function getFeatured($product) {
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
       </a>
-    </div> <!-- .carousel -->
+    </div> <!-- .carousel close -->
 
   </section>
 
@@ -101,13 +101,53 @@ function getFeatured($product) {
       </div>
       <?php endforeach; ?>
 
+    </div> <!-- .items close -->
+  </section>
+
+  <!-- feedback section   -->
+  <section class="feedback">
+    <div class="jumbotron">
+      <h1 class="display-4">Feedback</h1>
+      <p class="lead">We would love to hear from you!</p>
+
+      <!-- feedback form -->
+      <form id="feedback-form">
+        <div class="row">
+          <div class="form-group col-md-6 col-sm-12">
+            <input type="text" id="name" name="name" class="form-control" placeholder="Name">
+          </div>
+          <div class="form-group col-md-6 col-sm-12">
+            <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+          </div>
+        </div>
+        <div class="form-group">
+          <textarea id="comment" name="comment" cols="30" rows="10" class="form-control" placeholder="Leave your comment here"></textarea>
+        </div>
+        <button class="fdbck-btn btn btn-primary">Submit</button>
+      </form>
+
+      <div id="feedback-success">
+        <h1>Thank you for your feedback</h1>
+        <p><i class="fas fa-check-circle fa-3x"></i></p>
+      </div>
+
     </div>
   </section>
 
-</div>
+  <section class="advert">
+    <div class="jumbotron">
+      <h2>It's your</h2>
+      <h1 class="display-4">Last Chance!</h1>
+      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolorem nesciunt voluptates! Aliquam blanditiis iure minus placeat repellat totam vel.</p>
+      <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+    </div>
+  </section>
+
+</div> <!-- .wrapper close -->
 
 <script src="js/jquery-3.4.1.min.js"></script> <!-- jQuery script -->
 <script src="js/bootstrap.min.js"></script> <!-- bootstrap -->
 <script src="js/front.js"></script>
+<script src="js/feedback.js"></script>
 </body>
 </html>

@@ -52,7 +52,7 @@ function getCategoryName($category, $cat_id) {
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title"><?= $product['name'] ?></h5>
+              <h5 class="card-title"><?= $product['product_name'] ?></h5>
               <p class="card-text">
                 <?= $product['description'] ?>
               </p>

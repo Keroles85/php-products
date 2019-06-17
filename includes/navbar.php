@@ -2,28 +2,15 @@
 session_start();
 ?>
 
-<style>
-  .dropdown {
-    border: 1px solid #e7e7e7;
-    border-radius: 5px;
-  }
-
-  .dropdown-toggle {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .user{
-    margin: 0 0.5rem;
-    text-decoration: underline;
-  }
-</style>
+<link rel="stylesheet" href="style/css/navbar.css">
+<script src="js/navbar.js"></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
-    <a class="navbar-brand" href="http://localhost/Assignment/php-products-oop/" title="Furniture Home">
-      <i class="fas fa-chair fa-2x"></i></a>
+    <a class="navbar-brand" href="http://localhost/Assignment/php-products/" title="Furniture Home">
+      <!--<i class="fas fa-chair fa-2x"></i>-->
+      <img src="img/furniture-logo.png" alt="">
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -42,6 +29,12 @@ session_start();
           <a class="nav-link" href="#">About us</a>
         </li>
       </ul>
+
+      <!-- search bar -->
+      <form class="form-inline my-2 my-lg-0" style="position: relative">
+        <input class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search" autocomplete="off">
+        <div class="search-result">Type Something to search for...</div>
+      </form>
 
       <div class="dropdown">
         <div class="dropdown-toggle" id="userMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,21 +70,3 @@ session_start();
 
 <!-- Login Modal -->
 <div class="login"></div>
-<!-- Login Modal End -->
-
-<script>
-  $(document).ready(function() {
-    //load the modal page and show when clicked
-    $('#register_btn').click(function() {
-      $('.register').load('./includes/register_modal.php', function () {  
-        $('#registerModal').modal('show');
-      });
-    });
-
-    $('#login_btn').click(function() {
-      $('.login').load('./includes/login_modal.php', function () {  
-        $('#loginModal').modal('show');
-      });
-    });
-  });
-</script>

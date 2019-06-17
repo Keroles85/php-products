@@ -19,6 +19,10 @@
             <label for="password">Password</label>
             <input type="password" class="form-control" id="password" name="password">
           </div>
+          <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+            <label class="form-check-label" for="remember">Remember me</label>
+          </div>
           <button type="submit" name="login_btn" class="btn btn-primary">Log In</button>
         </form>
       </div>

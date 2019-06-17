@@ -11,7 +11,7 @@ class User extends Database {
   /*
    * login method
    */
-  public function login($email, $password) {
+  public function login($email, $password, $cookie) {
 
     $query = "SELECT * FROM users WHERE email=:email AND password=:password";
     $stmt = $this->dbConnect()->prepare($query);
@@ -24,10 +24,13 @@ class User extends Database {
       //check if user is admin
       if ($user['isadmin']) {
         $_SESSION['admin'] = $user;
-        header("location: http://localhost/Assignment/php-products-oop/backend/");
+        header("location: http://localhost/Assignment/php-products/backend/");
       } else {
         $_SESSION['user'] = $user;
-        header("location: http://localhost/Assignment/php-products-oop/");
+        if ($cookie) {
+          setcookie('user', )
+        }
+        header("location: http://localhost/Assignment/php-products/");
       }
 
     } else {

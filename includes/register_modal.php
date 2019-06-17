@@ -10,21 +10,32 @@
       </div>
 
       <div class="modal-body" style="text-align: left">
-        <form action="user.php" method="post">
+        <form action="user.php" method="post" class="user-register">
           <div class="row" style="margin-bottom: 1rem">
             <div class="col">
-              <input type="text" name="first_name" class="form-control" placeholder="First name">
+              <input type="text" id="validationCustom01" name="first_name" class="form-control" placeholder="First name" required>
+              <div class="invalid-feedback">
+                Please provide valid name
+              </div>
             </div>
             <div class="col">
-              <input type="text" name="last_name"class="form-control" placeholder="Last name">
+              <input type="text" id="validationCustom02" name="last_name"class="form-control" placeholder="Last name" required>
+              <div class="invalid-feedback">
+                Please provide valid name
+              </div>
             </div>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
-            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+            <input type="email" aria-invalid="email" class="form-control" id="validationCustom03" name="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+            <div class="invalid-feedback">
+              Please provide valid email
+            </div>
           </div>
           <div class="form-group">
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            <input type="password" class="form-control" id="validationCustom04" name="password" placeholder="Password" required>
+            <div class="invalid-feedback">
+              Please provide valid password
+            </div>
           </div>
           <button type="submit" name="register_btn" class="btn btn-success">Sign Up</button>
         </form>
