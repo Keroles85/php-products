@@ -2,22 +2,22 @@
 include_once dirname(__DIR__) . '/includes/admin-session.php';
 include_once dirname(__DIR__) . '/includes/autoload.php';
 
-if (isset($_GET['cat'])) $catID = $_GET['cat'];
+//if (isset($_GET['cat'])) $catID = $_GET['cat'];
 
 function getProducts($product,$catID) {
-  if (!isset($catID) || $catID == 'all') {
+  /*if (!isset($catID) || $catID == 'all') {
     $products = $product->readAll();
   } else {
     $products = $product->readAllByCategory($catID);
   }
-  return $products;
+  return $products;*/
+
 }
 
 function getCategories($category) {
   return $category->readAll();
 }
 
-$products = getProducts(new Product(), $catID);
 $categories = getCategories(new Category());
 
 ?>
@@ -43,54 +43,27 @@ $categories = getCategories(new Category());
         <h1>Products Main Page</h1>
 
         <!-- select category to sort products -->
-        <div class="form-group">
-          <label for="categories">Select Category to filter</label>
-          <select name="categories" id="categories" class="form-control">
-            <option value="all">-- All --</option>
-            <?php foreach ($categories as $category): ?>
-              <option value="<?= $category['id'] ?>" <?= ($catID == $category['id'])? 'selected': ''; ?> ><?= $category['name'] ?></option>
-            <?php endforeach; ?>
-          </select>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="categories">Select Category </label>
+              <select name="categories" id="categories" class="form-control">
+                <option value="0">-- Select --</option>
+                <?php foreach ($categories as $category): ?>
+                  <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+          <!-- new product button -->
+          <div class="col" style="padding-top: 2rem">
+            <a href='add.php?type=product' class="btn btn-success">Add New Product</a>
+          </div>
         </div>
 
-        <!-- button to add new product -->
-        <a href='add.php?type=product' class="btn btn-success" style="margin: 0 0 2em 1em;">Add New Product</a>
+        <!-- products table div -->
+        <div class="products"></div>
 
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Category</th>
-              <th scope="col">Name</th>
-              <th scope="col">Description</th>
-              <th scope="col">Price</th>
-              <th scope="col">Image</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <?php foreach($products as $product): ?>
-            <tr>
-              <th scope="row"><?= $product['id'] ?></th>
-              <td><?= $product['cat_name'] ?></td>
-              <td><?= $product['product_name'] ?></td>
-              <td><?= $product['description'] ?></td>
-              <td><?= $product['price'] ?></td>
-              <td><img src="../<?= $product['image_url'] ?>" class="img-thumbnail"></td>
-              <td>
-                <a href="update.php?type=product&id=<?= $product['id'] ?>" title="Update Record">
-                  <i class="fas fa-pen"></i>
-                </a> &nbsp;
-                <a onClick="javascript: return confirm('Are you sure?!');" href="delete.php?type=product&id=<?= $product['id'] ?>" title="Delete Record">
-                  <i class="fas fa-trash-alt" style="color:red"></i>
-                </a>
-              </td>
-            </tr>
-            <?php endforeach; ?>
-
-          </tbody>
-        </table>
       </div>
     </section>
   </div>
@@ -99,12 +72,7 @@ $categories = getCategories(new Category());
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="../js/bootstrap.min.js"></script> <!-- bootstrap -->
   <script src="../js/admin.js"></script> <!-- my-script -->
+  <script src="../js/backend-products.js"></script>
 
-
-  <script>
-    $('#categories').change(function() {
-
-    });
-  </script>
 </body>
 </html>

@@ -11,7 +11,7 @@ class User extends Database {
   /*
    * login method
    */
-  public function login($email, $password, $cookie) {
+  public function login($email, $password) {
 
     $query = "SELECT * FROM users WHERE email=:email AND password=:password";
     $stmt = $this->dbConnect()->prepare($query);
@@ -27,9 +27,6 @@ class User extends Database {
         header("location: http://localhost/Assignment/php-products/backend/");
       } else {
         $_SESSION['user'] = $user;
-        if ($cookie) {
-          setcookie('user', )
-        }
         header("location: http://localhost/Assignment/php-products/");
       }
 
