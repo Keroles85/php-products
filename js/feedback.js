@@ -5,9 +5,9 @@ $(document).ready(function () {
     $.post('ajax/feedback.php',
 
       //serialize form data
-      $('#feedback-form').serialize(),
-      function (success) {
-        if(success == success) {
+      $('#feedback-form').serialize(), //{data : ''}
+      function (status) {
+        if(status == 'success') {
           $('#feedback-form').hide();
           $('#feedback-success').show();
         }

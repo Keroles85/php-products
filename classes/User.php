@@ -24,10 +24,10 @@ class User extends Database {
       //check if user is admin
       if ($user['isadmin']) {
         $_SESSION['admin'] = $user;
-        header("location: http://localhost/Assignment/php-products/backend/");
+        header("location: http://localhost/assignment/php-products/backend/");
       } else {
         $_SESSION['user'] = $user;
-        header("location: http://localhost/Assignment/php-products/");
+        header("location: http://localhost/assignment/php-products/");
       }
 
     } else {

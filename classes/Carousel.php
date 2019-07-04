@@ -18,7 +18,7 @@ class Carousel extends Database {
    * Read all visible items method
    */
   public function readVisible() {
-    $query = "SELECT * FROM carousel WHERE visible=1";
+    $query = 'SELECT * FROM carousel WHERE visible=1 ORDER BY active DESC';
     $stmt = $this->dbConnect()->prepare($query);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -66,6 +66,19 @@ class Carousel extends Database {
 
 
   /*
+   * update active and visible status function
+   */
+  public function updateStatus($id, $action, $status) {
+    $query = 'UPDATE carousel SET ' . $action . '=:status WHERE id=:id';
+    $stmt = $this->dbConnect()->prepare($query);
+    $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    return $stmt->rowCount();
+  }
+
+
+  /*
    * Read carousel item by ID
    */
   public function readByID($id) {
@@ -86,7 +99,7 @@ class Carousel extends Database {
 
 
   /*
-   * Check for active items in carousel by ID method
+   * Check for active status for items by id
    */
   public function getActiveByID($id) {
     $query = 'SELECT active FROM carousel WHERE id=?';

@@ -7,7 +7,7 @@ session_start();
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
-    <a class="navbar-brand" href="http://localhost/Assignment/php-products/" title="Furniture Home">
+    <a class="navbar-brand" href="http://localhost/assignment/php-products/" title="Furniture Home">
       <!--<i class="fas fa-chair fa-2x"></i>-->
       <img src="img/furniture-logo.png" alt="">
     </a>

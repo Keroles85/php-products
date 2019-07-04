@@ -48,6 +48,7 @@ $(document).ready(function() {
     }
   });
 
+  //delay the hide so the user can click on search result
   $('#search').blur(function() {
     $('.search-result').delay(100).hide(0);
   });

@@ -11,6 +11,23 @@ function checkActive($carousel) {
   return $carousel->getActive();
 }
 
+function updateStatus($carousel, $id, $action, $status) {
+  $carousel->updateStatus($id, $action, $status);
+  header('location:carousel.php');
+}
+
+if (isset($_GET['action'])) {
+  $carousel = new Carousel();
+  $action = $_GET['action'];
+  $id = $_GET['id'];
+  if($action == 'visible') {
+    $status = isset($_POST['visible']) ? 1 : 0;
+  } else {
+   $status = isset($_POST['active']) ? 1 : 0;
+  }
+  updateStatus($carousel, $id, $action, $status);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -23,6 +40,14 @@ function checkActive($carousel) {
   <link rel="stylesheet" href="../style/css/all.min.css"> <!-- fontaweson -->
   <link rel="stylesheet" href="../style/css/main.css"> <!-- my-style -->
   <link rel="stylesheet" href="../style/css/carousel.css"> <!-- my-style -->
+  <style>
+    .carousel_status {
+      border: none!important;
+      padding: 0!important;
+      box-shadow: none!important;
+      text-align: center;
+    }
+  </style>
   <title>Carousel management page</title>
 </head>
 <body>
@@ -41,10 +66,7 @@ function checkActive($carousel) {
     <section class="main-section">
       <div class="container">
         <h1>Carousel control page</h1>
-
         <a href='add.php?type=carousel' class="btn btn-success" style="margin: 0 0 2em 1em;">Add New Item</a>
-        <button class="btn btn-primary" style="margin: 0 0 2em;">Update Status</button>
-
         <table class="table">
           <thead>
             <tr>
@@ -72,11 +94,11 @@ function checkActive($carousel) {
             </td>
             <td><img src="../<?= $item['img_url'] ?>" class="img-thumbnail"></td>
             <td>
-              <input type="checkbox" name="visibilty" <?= $item['visible']? 'checked' : ''; ?>>
+              <input type="checkbox" name="visible" class="visible-cb" data-id="<?= $item['id'] ?>" <?= $item['visible']? 'checked' : ''; ?>>
             </td>
             <td>
-              <input type="radio" name="active" <?= $item['active']? 'checked' : ''; ?>>
-              </td>
+                <input type="radio" name="active" <?= $item['active']? 'checked' : ''; ?>>
+            </td>
             <td>
               <a href="update.php?type=carousel&id=<?= $item['id'] ?>" title="Update Record">
                 <i class="fas fa-pen"></i>
@@ -99,5 +121,6 @@ function checkActive($carousel) {
   <script src="../js/jquery-3.4.1.min.js"></script> <!-- jQuery script -->
   <script src="../js/bootstrap.min.js"></script> <!-- bootstrap -->
   <script src="../js/admin.js"></script> <!-- my-script -->
+  <script src="../js/carousel.js"></script>
 </body>
 </html>
