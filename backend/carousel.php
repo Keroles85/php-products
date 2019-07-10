@@ -67,6 +67,7 @@ if (isset($_GET['action'])) {
       <div class="container">
         <h1>Carousel control page</h1>
         <a href='add.php?type=carousel' class="btn btn-success" style="margin: 0 0 2em 1em;">Add New Item</a>
+        <div id="activeChange"></div>
         <table class="table">
           <thead>
             <tr>
@@ -97,7 +98,7 @@ if (isset($_GET['action'])) {
               <input type="checkbox" name="visible" class="visible-cb" data-id="<?= $item['id'] ?>" <?= $item['visible']? 'checked' : ''; ?>>
             </td>
             <td>
-                <input type="radio" name="active" <?= $item['active']? 'checked' : ''; ?>>
+              <input type="radio" name="active" data-id="<?= $item['id'] ?>" class="active" <?= $item['active']? 'checked' : ''; ?>>
             </td>
             <td>
               <a href="update.php?type=carousel&id=<?= $item['id'] ?>" title="Update Record">

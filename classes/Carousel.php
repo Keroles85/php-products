@@ -66,15 +66,31 @@ class Carousel extends Database {
 
 
   /*
-   * update active and visible status function
+   * update status function
    */
-  public function updateStatus($id, $action, $status) {
-    $query = 'UPDATE carousel SET ' . $action . '=:status WHERE id=:id';
+  public function updateVisible($id, $status) {
+    $query = 'UPDATE carousel SET visible=:status WHERE id=:id';
     $stmt = $this->dbConnect()->prepare($query);
     $stmt->bindParam(':status', $status);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
     return $stmt->rowCount();
+  }
+
+
+  /*
+   * Update active function
+   */
+  public function updateActive($id) {
+    $query = 'UPDATE carousel SET active=1 WHERE id=:id';
+    $stmt = $this->dbConnect()->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $query = 'UPDATE carousel SET active=0 WHERE id<>:id';
+    $stmt = $this->dbConnect()->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
   }
 
 
@@ -103,6 +119,17 @@ class Carousel extends Database {
    */
   public function getActiveByID($id) {
     $query = 'SELECT active FROM carousel WHERE id=?';
+    $stmt = $this->dbConnect()->prepare($query);
+    $stmt->execute([$id]);
+    return $stmt->fetchColumn();
+  }
+
+
+  /*
+   * check for visible status for items by id
+   */
+  public function getVisibleByID($id) {
+    $query = 'SELECT visible FROM carousel WHERE id=?';
     $stmt = $this->dbConnect()->prepare($query);
     $stmt->execute([$id]);
     return $stmt->fetchColumn();
